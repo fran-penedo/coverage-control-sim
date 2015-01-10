@@ -8,8 +8,8 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 
 public class TestActor extends MovingActor {
 
-	public TestActor(int id, Director director) {
-		super(id, director);
+	public TestActor(Director director) {
+		super(director);
 
 		p = new Point(10, 10);
 		v = 5;
@@ -32,5 +32,10 @@ public class TestActor extends MovingActor {
 	@Override
 	public String toString() {
 		return "Moving";
+	}
+
+	@Override
+	public void init() {
+
 	}
 }

@@ -11,4 +11,7 @@ public interface Discount {
 
 	public double eval(double t);
 
+	// FIXME min(D, T)
+	public double getDeadline();
+
 }

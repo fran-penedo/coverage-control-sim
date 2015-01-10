@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import bu.edu.coverage.coverage_control_sim.control.Discount;
+import bu.edu.coverage.coverage_control_sim.event.Event;
+import bu.edu.coverage.coverage_control_sim.event.Event.Type;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -22,16 +24,73 @@ public class Target extends MovingActor {
 	public Discount discount;
 	public double ireward;
 
-	/**
-	 * @param id
-	 * @param director
-	 */
-	public Target(int id, Director director, Discount discount, double ireward,
-			double size) {
-		super(id, director);
+	protected boolean active;
+
+	public Target(Director director, Point p, double size, double v,
+			double heading, Discount discount, double ireward) {
+		super(director, p, new Point(size, size), v, heading);
 		this.discount = discount;
 		this.ireward = ireward;
-		this.size = new Point(size, size);
+		this.active = true;
+	}
+
+	public Target(Target t, Director director) {
+		this(director, t.p, t.size.x, t.v, t.heading, t.discount, t.ireward);
+	}
+
+	@Override
+	public void init() {
+		// Broadcast target existence. I think this is ugly...
+		for (Actor a : director.getActors()) {
+			postEvent(new Event(director.getCurrentTime(),
+					director.getCurrentTime(), a, Type.TARGET, this));
+		}
+	}
+
+	@Override
+	public void fire(Event e) {
+		switch (e.type) {
+		case VISIT: {
+			visitEvent(e);
+			break;
+		}
+		default: {
+			super.fire(e);
+			break;
+		}
+		}
+
+	}
+
+	protected void visitEvent(Event e) {
+		if (isActive()) {
+			setActive(false);
+			Agent a = (Agent) e.payload;
+			VisitEventInfo info = new VisitEventInfo(this,
+					getReward(director.getCurrentTime()));
+			postEvent(new Event(director.getCurrentTime(),
+					director.getCurrentTime(), a, Type.VISITED, info));
+		}
+	}
+
+	public boolean inRange(Point point) {
+		return this.p.dist(point) <= size.x / 2;
+	}
+
+	public double getReward(double t) {
+		return ireward * discount.eval(t);
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void visit() {
+		active = false;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	/*
@@ -41,33 +100,20 @@ public class Target extends MovingActor {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		Color color = Painter.getMixedColor(ACTIVE_COLOR, INACTIVE_COLOR,
-				getReward(last_update) / ireward);
+		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
+				INACTIVE_COLOR, getReward(last_update) / ireward)
+				: INACTIVE_COLOR;
 		Painter.drawStar((Graphics2D) g, p, size.x, color);
 	}
 
-	public double getReward(double t) {
-		return ireward * discount.eval(t);
-	}
+	public class VisitEventInfo {
+		public final Target target;
+		public final double reward;
 
-	public static class TargetInfo {
-		public Point p;
-		public Point size;
-		public Discount discount;
-		public double ireward;
-
-		/**
-		 * @param p
-		 * @param size
-		 * @param discount
-		 * @param ireward
-		 */
-		public TargetInfo(Point p, Point size, Discount discount, double ireward) {
-			this.p = p;
-			this.size = size;
-			this.discount = discount;
-			this.ireward = ireward;
+		public VisitEventInfo(Target target, double reward) {
+			this.target = target;
+			this.reward = reward;
 		}
-
 	}
+
 }

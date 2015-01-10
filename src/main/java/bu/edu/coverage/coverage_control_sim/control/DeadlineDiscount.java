@@ -40,4 +40,8 @@ public class DeadlineDiscount implements Discount {
 			return ((1 - alpha) * Math.exp(-beta * (t - d)));
 		}
 	}
+
+	public double getDeadline() {
+		return d;
+	}
 }

@@ -3,7 +3,7 @@
  */
 package bu.edu.coverage.coverage_control_sim.actor;
 
-import bu.edu.coverage.coverage_control_sim.event.UpdateEvent;
+import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -16,13 +16,19 @@ public abstract class MovingActor extends Actor {
 	 */
 	protected double v;
 	protected double heading;
+
+	public MovingActor(Director director, Point p, Point size, double v,
+			double heading) {
+		super(director, p, size);
+		this.v = v;
+		this.heading = heading;
+	}
+
 	/**
 	 * @param id
 	 */
-	public MovingActor(int id, Director director) {
-		super(id, director);
-
-		v = 0;
+	public MovingActor(Director director) {
+		this(director, new Point(100, 100), new Point(50, 50), 0, 0);
 	}
 
 	/**
@@ -44,11 +50,15 @@ public abstract class MovingActor extends Actor {
 		return new Point(v * Math.cos(heading), v * Math.sin(heading));
 	}
 
+	public double getV() {
+		return v;
+	}
+
 	@Override
-	public void fire(UpdateEvent e) {
+	protected void updateEvent(Event e) {
 		double last = this.last_update;
 
-		super.fire(e);
+		super.updateEvent(e);
 		this.move(e.due - last);
 	}
 

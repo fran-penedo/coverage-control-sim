@@ -13,17 +13,26 @@ public class Event implements Comparable<Event> {
 	public final double due;
 	public final double start;
 	public final Actor actor;
+	public final Type type;
+	public final Object payload;
 
 	/**
 	 * 
 	 */
-	public Event(double start, double due, Actor actor) {
+	public Event(double start, double due, Actor actor, Type type,
+			Object payload) {
 		if (start > due) {
 			throw new IllegalArgumentException("Start time after due time");
 		}
 		this.start = start;
 		this.due = due;
 		this.actor = actor;
+		this.type = type;
+		this.payload = payload;
+	}
+
+	public Event(double start, double due, Actor actor, Type type) {
+		this(start, due, actor, type, null);
 	}
 
 	public int compareTo(Event o) {
@@ -38,11 +47,15 @@ public class Event implements Comparable<Event> {
 
 	@Override
 	public String toString() {
-		return "Event due: " + due + ". ";
+		return "Event due: " + due + ". " + "Type: " + type + ". ";
 	}
 
 	public void dispatch() {
 		actor.fire(this);
+	}
+
+	public enum Type {
+		UPDATE, TARGET, CONTROL, SENSE, MESSAGE, VISITED, VISIT
 	}
 
 }

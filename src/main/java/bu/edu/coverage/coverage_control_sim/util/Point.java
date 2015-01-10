@@ -36,6 +36,22 @@ public final class Point {
 				(this.x - b.x)));
 	}
 
+	public Point unitary() {
+		return scale(1 / dist(this));
+	}
+
+	public Point scale(double s) {
+		return new Point(x * s, y * s);
+	}
+
+	public Point diff(Point b) {
+		return new Point(x - b.x, y - b.x);
+	}
+
+	public Point unitDiff(Point b) {
+		return diff(b).unitary();
+	}
+
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";

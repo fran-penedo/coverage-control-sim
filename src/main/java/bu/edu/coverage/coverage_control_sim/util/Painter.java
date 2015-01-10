@@ -36,24 +36,25 @@ public class Painter {
 		g.setStroke(mediumStroke);
 		g.setColor(color);
 
-		double x = center.x - size / 3.0;  // make the center of the star the
-											// event location. 3.0 is empirical.
+		double x = size / 2 - size / 9.0;  // make the center of the star the
+											// event location. 9.0 is empirical.
 											// I am too lazy to find the exact
 											// value.
-		double y = center.y + size / 3.0;
+		double y = size / 2 + size / 9.0;
 		double angle = Math.PI;
 		double xNext;
 		double yNext;
+		double side = size / 3;
 
 		for (int i = 0; i < 5; i++) {
-			xNext = x + size * Math.cos(angle);
-			yNext = y + size * Math.sin(angle);
+			xNext = x + side * Math.cos(angle);
+			yNext = y + side * Math.sin(angle);
 			g.drawLine((int) x, (int) y, (int) xNext, (int) yNext);
 			x = xNext;
 			y = yNext;
 			angle = angle + 0.8 * Math.PI;
-			xNext = x + size * Math.cos(angle);
-			yNext = y + size * Math.sin(angle);
+			xNext = x + side * Math.cos(angle);
+			yNext = y + side * Math.sin(angle);
 			g.drawLine((int) x, (int) y, (int) xNext, (int) yNext);
 			x = xNext;
 			y = yNext;
@@ -69,14 +70,14 @@ public class Painter {
 		Color pcolor = g.getColor();
 		g.setColor(color);
 
-		int x = (int) center.x;
-		int y = (int) center.y;
 		int w = (int) size.x;
 		int h = (int) size.y;
+		int x = w / 2;
+		int y = h / 2;
 
-		g.fillOval(x - w / 2, y - h / 2, w, h);
+		g.fillOval(0, 0, w, h);
 		g.setColor(Color.black);
-		g.drawOval(x - w / 2, y - h / 2, w, h);
+		g.drawOval(0, 0, w, h);
 		g.drawString("" + id, x - g.getFontMetrics().stringWidth("" + id) / 2,
 				y + 4);
 
