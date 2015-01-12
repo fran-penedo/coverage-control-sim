@@ -15,12 +15,16 @@ import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
-import bu.edu.coverage.coverage_control_sim.actor.Director;
+import bu.edu.coverage.coverage_control_sim.actor.MasterAgent;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 import bu.edu.coverage.coverage_control_sim.comm.BasicComm;
 import bu.edu.coverage.coverage_control_sim.control.DeadlineDiscount;
 import bu.edu.coverage.coverage_control_sim.control.Discount;
+import bu.edu.coverage.coverage_control_sim.control.KLCRH;
+import bu.edu.coverage.coverage_control_sim.control.KLCRHClient;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.sense.BasicSense;
+import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -85,19 +89,32 @@ public class Tableau extends JPanel implements ActionListener {
 		double heading = 0;
 		Discount discount = new DeadlineDiscount(1, 1, 1000);
 		double ireward = 100;
-		Target t = new Target(d, p, size, v, heading, discount, ireward);
+		Target t = new Target(d, p, size, v, heading, discount, ireward, true);
 		ActorComponent ac = new ActorComponent(t);
 		add(ac);
 	}
 
 	public void addAgent(Point p) {
 		Point size = new Point(20, 20);
-		double v = 1;
+		double v = 4;
 		double heading = 0;
 		Agent a = new Agent(d, p, size, v, heading);
 		a.setCommunication(new BasicComm());
 		a.setSense(new BasicSense(1));
+		a.setControl(new KLCRHClient());
 		ActorComponent ac = new ActorComponent(a);
+		add(ac);
+	}
+
+	public void addMaster() {
+		int K = 2;
+		double delta = 0.5;
+		int b = 2;
+		MasterAgent master = new MasterAgent(d);
+		master.setCommunication(new BasicComm());
+		master.setControl(new KLCRH(K, delta, b));
+		master.setSense(new MasterSense());
+		ActorComponent ac = new ActorComponent(master);
 		add(ac);
 	}
 

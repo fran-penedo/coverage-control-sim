@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
-import bu.edu.coverage.coverage_control_sim.actor.Director;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.ui.ActorComponent;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 

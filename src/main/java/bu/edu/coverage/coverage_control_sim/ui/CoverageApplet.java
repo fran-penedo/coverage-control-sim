@@ -19,7 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import bu.edu.coverage.coverage_control_sim.actor.Director;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 
 /**
  * @author fran
@@ -32,6 +32,8 @@ public class CoverageApplet extends Applet implements ActionListener {
 	public static final String SELECT = "Select";
 	public static final String ADDAGENTS = "Add Agents";
 	public static final String ADDTARGETS = "Add Targets";
+
+	public static final int SIZE = 500;
 
 	protected Tableau t;
 
@@ -82,10 +84,11 @@ public class CoverageApplet extends Applet implements ActionListener {
 
 	protected void createGUI() {
 		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(500, 500));
+		setPreferredSize(new Dimension(800, 800));
 
 		Director d = new Director();
-		t = new Tableau(200, 200, d); // TODO parameter
+		t = new Tableau(SIZE, SIZE, d);
+		t.addMaster();
 
 		JPanel center = new JPanel();
 		center.add(t);

@@ -5,6 +5,7 @@ package bu.edu.coverage.coverage_control_sim.actor;
 
 import java.awt.Graphics;
 
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -25,7 +26,7 @@ public abstract class Actor {
 		this.p = p;
 		this.size = size;
 		director.addActor(this);
-		last_update = 0;
+		last_update = director.getCurrentTime();
 	}
 
 	public Actor(Director director) {
@@ -97,6 +98,10 @@ public abstract class Actor {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	public void setPos(Point npos) {
+		this.p = npos;
 	}
 
 }

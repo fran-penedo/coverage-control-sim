@@ -3,12 +3,11 @@
  */
 package bu.edu.coverage.coverage_control_sim.comm;
 
-import java.util.HashSet;
-
+import bu.edu.coverage.coverage_control_sim.actor.Actor;
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.actor.Agent.VisitedMsgInfo;
 import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.event.Event.Type;
+import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 
 /**
  * Simple Communication scheme. No relay.
@@ -17,13 +16,13 @@ import bu.edu.coverage.coverage_control_sim.event.Event.Type;
  *
  */
 public class BasicComm extends Communication {
-	public BasicComm() {
-		known = new HashSet<Agent>();
-	}
 
 	@Override
 	public void init() {
-		send(new Message(agent.getId(), Message.BC, Message.Type.PING, agent));
+		double now = agent.getDirector().getCurrentTime();
+		for (Actor a : agent.getDirector().getActors()) {
+			agent.postEvent(new Event(now, now, a, EType.AGENT, agent));
+		}
 	}
 
 	/*
@@ -34,8 +33,20 @@ public class BasicComm extends Communication {
 	 * .coverage_control_sim.comm.Message)
 	 */
 	public void send(Message msg) {
+		if (msg.to == Message.BC) {
+			for (Agent a : known.values()) {
+				sendSingle(new Message(msg.from, a.getId(), msg.type,
+						msg.payload));
+			}
+		} else if (known.containsKey(msg.to)) {
+			sendSingle(msg);
+		}
+	}
+
+	protected void sendSingle(Message msg) {
 		double time = agent.getDirector().getCurrentTime();
-		Event event = new Event(time, time, agent, Type.MESSAGE, msg);
+		Event event = new Event(time, time, known.get(msg.to), EType.MESSAGE,
+				msg);
 		agent.postEvent(event);
 	}
 
@@ -66,6 +77,10 @@ public class BasicComm extends Communication {
 			processControl(msg);
 			break;
 		}
+		case JOIN_CONTROL: {
+			processJoinControl(msg);
+			break;
+		}
 		default: {
 			System.err.println(); // FIXME
 			break;
@@ -74,7 +89,8 @@ public class BasicComm extends Communication {
 	}
 
 	public void processPing(Message msg) {
-		known.add((Agent) msg.payload);
+		Agent a = (Agent) msg.payload;
+		known.put(a.getId(), a);
 	}
 
 	public void processVisited(Message msg) {
@@ -87,6 +103,12 @@ public class BasicComm extends Communication {
 	public void processControl(Message msg) {
 		if (agent.getControl() != null) {
 			agent.getControl().setHeading((Double) msg.payload);
+		}
+	}
+
+	public void processJoinControl(Message msg) {
+		if (agent.getControl() != null) {
+			agent.getControl().addNeighbor((Agent) msg.payload);
 		}
 	}
 

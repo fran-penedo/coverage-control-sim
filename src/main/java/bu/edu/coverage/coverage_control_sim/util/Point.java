@@ -29,15 +29,13 @@ public final class Point {
 		return Math.sqrt(this.dist2(b));
 	}
 
-	// TODO check if this is what I want. - for inverted Y axis, PI correction
-	// for tangent period
+	// PI correction for inverted Y axis
 	public double headTo(Point b) {
-		return -((this.x - b.x < 0 ? Math.PI : 0) + Math.atan2((this.y - b.y),
-				(this.x - b.x)));
+		return Math.atan2((this.y - b.y), (this.x - b.x)) + Math.PI;
 	}
 
 	public Point unitary() {
-		return scale(1 / dist(this));
+		return scale(1 / dist(ZERO));
 	}
 
 	public Point scale(double s) {
@@ -55,5 +53,9 @@ public final class Point {
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";
+	}
+
+	public Point add(Point b) {
+		return new Point(x + b.x, y + b.y);
 	}
 }

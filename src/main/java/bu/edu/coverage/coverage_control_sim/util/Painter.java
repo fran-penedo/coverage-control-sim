@@ -65,6 +65,17 @@ public class Painter {
 		g.setColor(pcolor);
 	}
 
+	public static void drawTarget(Graphics2D g, Point center, double size,
+			int id, Color color) {
+		Color pcolor = g.getColor();
+		drawStar(g, center, size, color);
+		g.setColor(Color.black);
+		g.drawString("" + id,
+				(int) size / 2 - g.getFontMetrics().stringWidth("" + id) / 2,
+				(int) size / 2 + 3);
+		g.setColor(pcolor);
+	}
+
 	public static void drawAgent(Graphics2D g, Point center, Point size,
 			double heading, int id, Color color) {
 		Color pcolor = g.getColor();

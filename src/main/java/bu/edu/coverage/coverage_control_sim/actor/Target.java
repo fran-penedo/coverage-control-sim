@@ -8,8 +8,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import bu.edu.coverage.coverage_control_sim.control.Discount;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.event.Event.Type;
+import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -27,15 +28,16 @@ public class Target extends MovingActor {
 	protected boolean active;
 
 	public Target(Director director, Point p, double size, double v,
-			double heading, Discount discount, double ireward) {
+			double heading, Discount discount, double ireward, boolean active) {
 		super(director, p, new Point(size, size), v, heading);
 		this.discount = discount;
 		this.ireward = ireward;
-		this.active = true;
+		this.active = active;
 	}
 
 	public Target(Target t, Director director) {
-		this(director, t.p, t.size.x, t.v, t.heading, t.discount, t.ireward);
+		this(director, t.p, t.size.x, t.v, t.heading, t.discount, t.ireward,
+				t.active);
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class Target extends MovingActor {
 		// Broadcast target existence. I think this is ugly...
 		for (Actor a : director.getActors()) {
 			postEvent(new Event(director.getCurrentTime(),
-					director.getCurrentTime(), a, Type.TARGET, this));
+					director.getCurrentTime(), a, EType.TARGET, this));
 		}
 	}
 
@@ -69,7 +71,7 @@ public class Target extends MovingActor {
 			VisitEventInfo info = new VisitEventInfo(this,
 					getReward(director.getCurrentTime()));
 			postEvent(new Event(director.getCurrentTime(),
-					director.getCurrentTime(), a, Type.VISITED, info));
+					director.getCurrentTime(), a, EType.VISITED, info));
 		}
 	}
 
@@ -103,7 +105,7 @@ public class Target extends MovingActor {
 		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
 				INACTIVE_COLOR, getReward(last_update) / ireward)
 				: INACTIVE_COLOR;
-		Painter.drawStar((Graphics2D) g, p, size.x, color);
+		Painter.drawTarget((Graphics2D) g, p, size.x, id, color);
 	}
 
 	public class VisitEventInfo {
@@ -114,6 +116,11 @@ public class Target extends MovingActor {
 			this.target = target;
 			this.reward = reward;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return p.toString();
 	}
 
 }

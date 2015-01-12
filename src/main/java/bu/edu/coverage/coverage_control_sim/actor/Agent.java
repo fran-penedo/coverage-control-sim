@@ -6,14 +6,13 @@ package bu.edu.coverage.coverage_control_sim.actor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 
 import bu.edu.coverage.coverage_control_sim.actor.Target.VisitEventInfo;
 import bu.edu.coverage.coverage_control_sim.comm.Communication;
 import bu.edu.coverage.coverage_control_sim.comm.Message;
-import bu.edu.coverage.coverage_control_sim.comm.Message.Type;
+import bu.edu.coverage.coverage_control_sim.comm.Message.MType;
 import bu.edu.coverage.coverage_control_sim.control.Control;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.sense.Sense;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
@@ -22,6 +21,7 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 /**
  * @author fran
  *
+ *         FIXME no need for getactors?
  */
 public class Agent extends MovingActor {
 
@@ -48,16 +48,17 @@ public class Agent extends MovingActor {
 
 	@Override
 	public void init() {
+
+		if (this.comm != null) {
+			comm.init();
+		}
+
 		if (this.control != null) {
 			control.init();
 		}
 
 		if (this.sense != null) {
 			sense.init();
-		}
-
-		if (this.comm != null) {
-			comm.init();
 		}
 
 	}
@@ -85,6 +86,10 @@ public class Agent extends MovingActor {
 			messageEvent(e);
 			break;
 		}
+		case AGENT: {
+			agentEvent(e);
+			break;
+		}
 		default: {
 			super.fire(e);
 			break;
@@ -106,7 +111,7 @@ public class Agent extends MovingActor {
 		}
 
 		if (comm != null) {
-			comm.send(new Message(id, Message.BC, Type.VISITED,
+			comm.send(new Message(id, Message.BC, MType.VISITED,
 					new VisitedMsgInfo(info.target, info.reward)));
 		}
 	}
@@ -127,6 +132,12 @@ public class Agent extends MovingActor {
 	protected void messageEvent(Event e) {
 		if (comm != null) {
 			comm.receive((Message) e.payload);
+		}
+	}
+
+	protected void agentEvent(Event e) {
+		if (comm != null) {
+			comm.addAgent((Agent) e.payload);
 		}
 	}
 
@@ -178,26 +189,6 @@ public class Agent extends MovingActor {
 		this.heading = heading;
 	}
 
-	/**
-	 * Gets a list of all known agents.
-	 * 
-	 * @return a list of all known agents.
-	 */
-	public List<Agent> getAgents() {
-		// FIXME null comm
-		return new ArrayList<Agent>(comm.getKnown());
-	}
-
-	/**
-	 * Gets a list of all known targets.
-	 * 
-	 * @return a list of all known targets.
-	 */
-	public List<Target> getTargets() {
-		// FIXME null sense
-		return sense.getTargets();
-	}
-
 	public class VisitedMsgInfo {
 		public final Target target;
 		public final double reward;
@@ -206,6 +197,11 @@ public class Agent extends MovingActor {
 			this.target = target;
 			this.reward = reward;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return p.toString();
 	}
 
 }

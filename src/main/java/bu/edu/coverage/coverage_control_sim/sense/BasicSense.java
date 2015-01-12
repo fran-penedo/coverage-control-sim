@@ -8,7 +8,7 @@ import java.util.List;
 
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.event.Event.Type;
+import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 
 /**
  * @author fran
@@ -19,14 +19,14 @@ public class BasicSense extends Sense {
 	protected double sample_t;
 
 	public BasicSense(double sample_t) {
-		active = new ArrayList<Target>();
 		this.sample_t = sample_t;
 	}
 
 	@Override
 	public void init() {
+		active = new ArrayList<Target>();
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
-				.getDirector().getCurrentTime(), agent, Type.SENSE));
+				.getDirector().getCurrentTime(), agent, EType.SENSE));
 	}
 
 	/*
@@ -39,12 +39,12 @@ public class BasicSense extends Sense {
 		for (Target t : active) {
 			if (visitable(t)) {
 				agent.postEvent(new Event(agent.getDirector().getCurrentTime(),
-						agent.getDirector().getCurrentTime(), t, Type.VISIT,
+						agent.getDirector().getCurrentTime(), t, EType.VISIT,
 						agent));
 			}
 		}
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
-				.getDirector().getCurrentTime() + sample_t, agent, Type.SENSE));
+				.getDirector().getCurrentTime() + sample_t, agent, EType.SENSE));
 	}
 
 	protected boolean visitable(Target t) {

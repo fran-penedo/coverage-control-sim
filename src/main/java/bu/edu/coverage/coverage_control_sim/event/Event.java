@@ -13,13 +13,13 @@ public class Event implements Comparable<Event> {
 	public final double due;
 	public final double start;
 	public final Actor actor;
-	public final Type type;
+	public final EType type;
 	public final Object payload;
 
 	/**
 	 * 
 	 */
-	public Event(double start, double due, Actor actor, Type type,
+	public Event(double start, double due, Actor actor, EType type,
 			Object payload) {
 		if (start > due) {
 			throw new IllegalArgumentException("Start time after due time");
@@ -31,7 +31,7 @@ public class Event implements Comparable<Event> {
 		this.payload = payload;
 	}
 
-	public Event(double start, double due, Actor actor, Type type) {
+	public Event(double start, double due, Actor actor, EType type) {
 		this(start, due, actor, type, null);
 	}
 
@@ -54,8 +54,8 @@ public class Event implements Comparable<Event> {
 		actor.fire(this);
 	}
 
-	public enum Type {
-		UPDATE, TARGET, CONTROL, SENSE, MESSAGE, VISITED, VISIT
+	public enum EType {
+		UPDATE, AGENT, TARGET, CONTROL, SENSE, MESSAGE, VISITED, VISIT
 	}
 
 }

@@ -3,7 +3,8 @@
  */
 package bu.edu.coverage.coverage_control_sim.comm;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
 
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
 
@@ -16,7 +17,11 @@ import bu.edu.coverage.coverage_control_sim.actor.Agent;
  */
 public abstract class Communication {
 	protected Agent agent;
-	protected HashSet<Agent> known;
+	protected HashMap<Integer, Agent> known;
+
+	public Communication() {
+		this.known = new HashMap<Integer, Agent>();
+	}
 
 	public void attach(Agent a) {
 		this.agent = a;
@@ -28,10 +33,11 @@ public abstract class Communication {
 
 	public abstract void receive(Message msg);
 
-	/**
-	 * @return the known
-	 */
-	public HashSet<Agent> getKnown() {
-		return known;
+	public void addAgent(Agent agent) {
+		known.put(agent.getId(), agent);
+	}
+
+	public Collection<Agent> getAgents() {
+		return known.values();
 	}
 }

@@ -9,10 +9,11 @@ import bu.edu.coverage.coverage_control_sim.actor.Target;
  * @author fran
  *
  */
-public class MasterSense extends Sense {
+public class MasterSense extends BasicSense {
 	protected double total_reward;
 
 	public MasterSense() {
+		super(0);
 		total_reward = 0;
 	}
 
@@ -23,6 +24,7 @@ public class MasterSense extends Sense {
 	 */
 	@Override
 	public void init() {
+		super.init();
 		total_reward = 0;
 
 	}
@@ -34,7 +36,7 @@ public class MasterSense extends Sense {
 	 */
 	@Override
 	public void sense() {
-		// TODO Auto-generated method stub
+		// ignore
 
 	}
 
@@ -47,6 +49,7 @@ public class MasterSense extends Sense {
 	 */
 	@Override
 	public void visited(Target target, double reward) {
+		super.visited(target, reward);
 		total_reward += reward;
 	}
 

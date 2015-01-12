@@ -15,18 +15,18 @@ public class Message {
 
 	public final int from; // No need for relays
 	public final int to;
-	public final Type type;
+	public final MType type;
 	public final Object payload;
 
-	public Message(int from, int to, Type type, Object payload) {
+	public Message(int from, int to, MType type, Object payload) {
 		this.from = from;
 		this.to = to;
 		this.type = type;
 		this.payload = payload;
 	}
 
-	public enum Type {
-		PING, VISITED, CONTROL
+	public enum MType {
+		PING, VISITED, CONTROL, JOIN_CONTROL
 	}
 
 }

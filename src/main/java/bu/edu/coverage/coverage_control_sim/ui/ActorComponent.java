@@ -30,7 +30,10 @@ public class ActorComponent extends JComponent {
 		this.a = a;
 		this.selected = false;
 		setActorBounds();
-		addMouseListener(new ACMouseAdapter());
+
+		ACMouseAdapter adapter = new ACMouseAdapter();
+		addMouseListener(adapter);
+		addMouseMotionListener(adapter);
 	}
 
 	@Override
@@ -64,7 +67,12 @@ public class ActorComponent extends JComponent {
 		}
 	}
 
+	protected void moveActor(Point npos) {
+		a.setPos(a.getPos().add(npos));
+	}
+
 	private class ACMouseAdapter extends MouseInputAdapter {
+		private Point source;
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -80,6 +88,21 @@ public class ActorComponent extends JComponent {
 			default:
 				break;
 			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.err.println("pressed");
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				source = new Point(e.getX(), e.getY());
+			}
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			Point npoint = new Point(e.getX(), e.getY());
+			moveActor(npoint.diff(source));
+			repaint();
 		}
 
 		private void mouseClicked2(MouseEvent e) {

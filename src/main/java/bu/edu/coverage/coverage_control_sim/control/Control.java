@@ -22,4 +22,15 @@ public abstract class Control {
 
 	public abstract void setHeading(double heading);
 
+	/**
+	 * 
+	 * NOTE: I'm justifying this as a common method for Control as a kind of
+	 * asynchronous input (unlike other inputs that it can get from other
+	 * modules)
+	 * 
+	 * @param agent
+	 *            an agent neighbour
+	 */
+	public abstract void addNeighbor(Agent agent);
+
 }

@@ -3,6 +3,7 @@
  */
 package bu.edu.coverage.coverage_control_sim.actor;
 
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 

@@ -4,17 +4,21 @@
 package bu.edu.coverage.coverage_control_sim.control;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
-import bu.edu.coverage.coverage_control_sim.actor.Director;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
+import bu.edu.coverage.coverage_control_sim.comm.Communication;
+import bu.edu.coverage.coverage_control_sim.comm.Message;
+import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.event.Event.Type;
+import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -25,6 +29,7 @@ public class KLCRH extends Control {
 	public final int K;
 	public double delta;
 	public int b;
+	protected HashSet<Agent> neighbors;
 
 	/**
 	 * 
@@ -33,6 +38,7 @@ public class KLCRH extends Control {
 		this.K = K;
 		this.delta = delta;
 		this.b = b;
+		this.neighbors = new HashSet<>();
 	}
 
 	public KLCRH() {
@@ -42,7 +48,7 @@ public class KLCRH extends Control {
 	@Override
 	public void init() {
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
-				.getDirector().getCurrentTime(), agent, Type.CONTROL));
+				.getDirector().getCurrentTime() + 0.2, agent, EType.CONTROL));
 	}
 
 	@Override
@@ -52,17 +58,43 @@ public class KLCRH extends Control {
 	}
 
 	@Override
+	public void addNeighbor(Agent agent) {
+		neighbors.add(agent);
+
+	}
+
+	@Override
 	public void control() {
 		double now = agent.getDirector().getCurrentTime();
 		Director d = new Director(now);
-		ArrayList<Agent> agents = copyAgents(d, agent.getAgents());
-		ArrayList<Target> targets = copyTargets(d, agent.getTargets());
+		ArrayList<Agent> agents = copyAgents(d, neighbors);
+		// FIXME no sense
+		ArrayList<Target> targets = copyTargets(d, agent.getSense()
+				.getTargets());
 
-		Heading best = bestHeading(d, agents, targets, K);
-		double action_h = actionH();
-		action_h = best.plan_h; // FIXME remove
+		if (agents.size() > 0 && targets.size() > 0) {
+			Heading best = bestHeading(d, agents, targets, K);
+			double action_h = actionH();
+			action_h = best.plan_h; // FIXME remove
 
-		agent.postEvent(new Event(now, now + action_h, agent, Type.CONTROL));
+			broadcastControl(neighbors, best, action_h);
+
+			agent.postEvent(new Event(now, now + action_h, agent, EType.CONTROL));
+		}
+	}
+
+	protected void broadcastControl(Collection<Agent> agents, Heading best,
+			double action_h) {
+		Communication comm = agent.getCommunication();
+		if (comm != null) {
+			int i = 0;
+			for (Agent a : agents) {
+				comm.send(new Message(agent.getId(), a.getId(),
+						Message.MType.CONTROL, best.heading.get(i)));
+				i++;
+			}
+		}
+
 	}
 
 	// FIXME todo
@@ -70,7 +102,7 @@ public class KLCRH extends Control {
 		return 0;
 	}
 
-	protected ArrayList<Agent> copyAgents(Director d, List<Agent> agents) {
+	protected ArrayList<Agent> copyAgents(Director d, Collection<Agent> agents) {
 		ArrayList<Agent> copy = new ArrayList<Agent>(agents.size());
 		for (Agent agent : agents) {
 			copy.add(new Agent(agent, d));
@@ -79,7 +111,8 @@ public class KLCRH extends Control {
 		return copy;
 	}
 
-	protected ArrayList<Target> copyTargets(Director d, List<Target> targets) {
+	protected ArrayList<Target> copyTargets(Director d,
+			Collection<Target> targets) {
 		ArrayList<Target> copy = new ArrayList<Target>(targets.size());
 		for (Target target : targets) {
 			copy.add(new Target(target, d));
@@ -98,6 +131,10 @@ public class KLCRH extends Control {
 		}
 
 		double plan_h = getPlanH(agents, targets);
+		if (plan_h == Double.POSITIVE_INFINITY) {
+			return new Heading(null, ji, 0);
+		}
+
 		List<List<Target>> active_targets = activeTargets(agents, targets,
 				plan_h);
 		List<List<Double>> active_heads = activeHeadings(agents, active_targets);
@@ -109,11 +146,13 @@ public class KLCRH extends Control {
 			List<Integer> next = it.next();
 			ArrayList<Double> heading = new ArrayList<Double>();
 			Director next_d = new Director(d.getCurrentTime());
-			ArrayList<Agent> next_agents = copyAgents(d, agents);
-			ArrayList<Target> next_targets = copyTargets(d, targets);
+			ArrayList<Agent> next_agents = copyAgents(next_d, agents);
+			ArrayList<Target> next_targets = copyTargets(next_d, targets);
 
 			for (int j = 0; j < next_agents.size(); j++) {
-				heading.add(active_heads.get(j).get(next.get(j)));
+				int index = next.get(j);
+				List<Double> head_list = active_heads.get(j);
+				heading.add(head_list.get(index));
 				next_agents.get(j).setHeading(heading.get(j));
 			}
 
@@ -133,9 +172,11 @@ public class KLCRH extends Control {
 		double h = Double.POSITIVE_INFINITY;
 		for (Agent a : agents) {
 			for (Target t : targets) {
-				double e = a.getPos().dist(t.getPos()) / a.getV();
-				if (e < h) {
-					h = e;
+				if (t.isActive()) {
+					double e = a.getPos().dist(t.getPos()) / a.getV();
+					if (e < h) {
+						h = e;
+					}
 				}
 			}
 		}
@@ -152,6 +193,7 @@ public class KLCRH extends Control {
 			for (Target t : active_targets.get(i)) {
 				active.add(a.getPos().headTo(t.getPos()));
 			}
+			active_set.add(active);
 		}
 		return active_set;
 	}
@@ -163,18 +205,22 @@ public class KLCRH extends Control {
 			ArrayList<Target> active = new ArrayList<Target>();
 
 			for (Target t : targets) {
-				boolean is_active = true;
-				double cost = targetTravelCost(t,
-						reachableToTarget(a, t, plan_h), targets);
-				Iterator<Target> it = targets.iterator();
-				while (is_active && it.hasNext()) {
-					Target t_cmp = it.next();
-					is_active = cost <= targetTravelCost(t_cmp,
-							reachableToTarget(a, t, plan_h), targets);
-				}
+				if (t.isActive()) {
+					boolean is_active = true;
+					Point r = reachableToTarget(a, t, plan_h);
+					double cost = targetTravelCost(t, r, targets);
+					Iterator<Target> it = targets.iterator();
+					while (is_active && it.hasNext()) {
+						Target t_cmp = it.next();
+						if (t_cmp.isActive()) {
+							is_active = cost <= targetTravelCost(t_cmp, r,
+									targets);
+						}
+					}
 
-				if (is_active) {
-					active.add(t);
+					if (is_active) {
+						active.add(t);
+					}
 				}
 			}
 			active_set.add(active);
@@ -183,7 +229,8 @@ public class KLCRH extends Control {
 	}
 
 	protected Point reachableToTarget(Agent a, Target t, double plan_h) {
-		return t.getPos().unitDiff(a.getPos()).scale(a.getV() * plan_h);
+		return a.getPos().add(
+				t.getPos().unitDiff(a.getPos()).scale(a.getV() * plan_h));
 	}
 
 	protected double rewardI(ArrayList<Agent> agents,
@@ -195,6 +242,7 @@ public class KLCRH extends Control {
 				// TODO 2 - Condition could be more complex, move to agent?
 				if (target.isActive() && target.inRange(agent.getPos())) {
 					j += target.getReward(t);
+					target.setActive(false);
 				}
 			}
 		}
@@ -209,14 +257,13 @@ public class KLCRH extends Control {
 		for (Agent agent : agents) {
 			ArrayList<Target> partition = p.getPartition(agent);
 			Point cur = agent.getPos();
-
-			for (int i = 0; i < partition.size(); i++) {
-				Collections.sort(partition, new Cmp(cur, targets));
+			Comparator<Target> cmp = new Cmp(cur, targets);
+			int size = partition.size();
+			for (int i = 0; i < size; i++) {
+				Collections.sort(partition, cmp);
 				Target target = partition.remove(0);
-				if (target.isActive() && target.inRange(cur)) {
-					j += target.getReward(cur.dist(target.getPos())
-							/ agent.getV());
-				}
+				j += target.getReward(t + cur.dist(target.getPos())
+						/ agent.getV());
 				cur = target.getPos();
 			}
 		}
@@ -233,9 +280,11 @@ public class KLCRH extends Control {
 	protected double targetCostFactor(Target t, List<Target> targets) {
 		double ret = 0;
 		for (Target ts : targets) {
-			// FIXME gamma
-			ret += t.getPos().dist(ts.getPos())
-					/ (ts.ireward / ts.discount.getDeadline());
+			if (ts.isActive()) {
+				// FIXME gamma
+				ret += t.getPos().dist(ts.getPos())
+						/ (ts.ireward / ts.discount.getDeadline());
+			}
 		}
 		return ret;
 	}

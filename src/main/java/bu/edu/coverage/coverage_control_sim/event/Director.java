@@ -1,14 +1,13 @@
 /**
  * 
  */
-package bu.edu.coverage.coverage_control_sim.actor;
+package bu.edu.coverage.coverage_control_sim.event;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.event.Event.Type;
-import bu.edu.coverage.coverage_control_sim.event.EventQueue;
+import bu.edu.coverage.coverage_control_sim.actor.Actor;
+import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 
 /**
  * @author fran
@@ -45,7 +44,7 @@ public class Director {
 
 	public void updateAll() {
 		for (Actor actor : actors) {
-			queue.add(new Event(time, time, actor, Type.UPDATE));
+			queue.add(new Event(time, time, actor, EType.UPDATE));
 		}
 		runFor(0);
 	}
