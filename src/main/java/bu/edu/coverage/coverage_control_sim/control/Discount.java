@@ -14,4 +14,5 @@ public interface Discount {
 	// FIXME min(D, T)
 	public double getDeadline();
 
+	public String toCode();
 }

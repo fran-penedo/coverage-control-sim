@@ -20,14 +20,16 @@ public abstract class Communication {
 	protected HashMap<Integer, Agent> known;
 
 	public Communication() {
-		this.known = new HashMap<Integer, Agent>();
+
 	}
 
 	public void attach(Agent a) {
 		this.agent = a;
 	}
 
-	public abstract void init();
+	public void init() {
+		this.known = new HashMap<Integer, Agent>();
+	}
 
 	public abstract void send(Message msg);
 
@@ -40,4 +42,10 @@ public abstract class Communication {
 	public Collection<Agent> getAgents() {
 		return known.values();
 	}
+
+	public String toCode() {
+		return "";
+	}
+
+	public abstract Communication deepCopy();
 }

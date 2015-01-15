@@ -58,4 +58,8 @@ public final class Point {
 	public Point add(Point b) {
 		return new Point(x + b.x, y + b.y);
 	}
+
+	public String toCode() {
+		return "(" + x + "," + y + ")";
+	}
 }

@@ -49,4 +49,9 @@ public class KLCRHClient extends Control {
 
 	}
 
+	@Override
+	public Control deepCopy() {
+		return new KLCRHClient();
+	}
+
 }

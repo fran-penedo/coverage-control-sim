@@ -15,6 +15,9 @@ import bu.edu.coverage.coverage_control_sim.control.Control;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.sense.Sense;
+import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.AgentInfo;
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -48,7 +51,6 @@ public class Agent extends MovingActor {
 
 	@Override
 	public void init() {
-
 		if (this.comm != null) {
 			comm.init();
 		}
@@ -204,4 +206,39 @@ public class Agent extends MovingActor {
 		return p.toString();
 	}
 
+	@Override
+	public String toCode() {
+		String s = super.toCode();
+		if (sense != null) {
+			s = s + sense.toCode();
+		}
+		if (comm != null) {
+			s = s + comm.toCode();
+		}
+		if (control != null) {
+			s = s + control.toCode();
+		}
+		return s;
+	}
+
+	@Override
+	public Actor deepCopy(Director d) {
+		Agent a = new Agent(this, d);
+		if (sense != null) {
+			a.setSense(sense.deepCopy());
+		}
+		if (comm != null) {
+			a.setCommunication(comm.deepCopy());
+		}
+		if (control != null) {
+			a.setControl(control.deepCopy());
+		}
+
+		return a;
+	}
+
+	@Override
+	public ActorInfo getInfoPanel(Tableau tableau) {
+		return AgentInfo.getAgentInfo(this, tableau);
+	}
 }

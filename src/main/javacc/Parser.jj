@@ -1,0 +1,173 @@
+PARSER_BEGIN(Parser)
+
+package bu.edu.coverage.coverage_control_sim.util;
+import bu.edu.coverage.coverage_control_sim.util.Point;
+import bu.edu.coverage.coverage_control_sim.event.Director;
+import bu.edu.coverage.coverage_control_sim.actor.*;
+import bu.edu.coverage.coverage_control_sim.control.*;
+import bu.edu.coverage.coverage_control_sim.comm.*;
+import bu.edu.coverage.coverage_control_sim.sense.*;
+
+
+public class Parser{	public static void main(String args[]) throws ParseException	{	  Parser p = new Parser(System.in);
+	  Director d = p.input();
+	  System.out.println(d.toCode());
+	}
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{  " "
+| "\t"
+}
+
+TOKEN :
+{  < MASTER: "MasterAgent" >
+| 
+  < AGENT: "Agent" >
+|
+  < TARGET: "Target" >
+|
+  < DEADLINE: "Deadline" >
+}
+
+TOKEN :
+{
+  < FLOATING_POINT_LITERAL: ("-")? < FLOAT >>
+| < #FLOAT:         (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+}
+
+TOKEN :
+{  < INT_LITERAL: ("-")? (["0"-"9"])+ >
+}
+
+
+Director input() :
+{
+  Director d = new Director();}{  ( actor(d) )+ < EOF >
+  {    return d;
+  }
+}
+
+void actor(Director d) :
+{}
+{  master(d) | agent(d) | target(d)
+}
+
+void master(Director d) :
+{
+  Point p;
+  Point size;
+  double v;
+  double heading;
+  int k;
+  double delta;
+  int b;}{  < MASTER >
+  p=point()
+  size=point()
+  v=value()
+  heading=value()
+  k=integer()
+  delta=value()
+  b=integer()
+  "\n"
+  {    MasterAgent master = new MasterAgent(d);
+    master.setCommunication(new BasicComm());
+	master.setControl(new KLCRH(k, delta, b));
+	master.setSense(new MasterSense());  }
+}
+
+void agent(Director d) :
+{
+  Point p;
+  Point size;
+  double v;
+  double heading;
+}
+{
+  < AGENT >
+  p=point()
+  size=point()
+  v=value()
+  heading=value()
+  "\n"
+  {
+    Agent agent = new Agent(d, p, size, v, heading);
+    agent.setCommunication(new BasicComm());
+	agent.setControl(new KLCRHClient());
+	agent.setSense(new BasicSense(1));
+  }
+}
+
+void target(Director d) :
+{
+  Point p;
+  Point size;
+  double v;
+  double heading;
+  double ireward;
+  Discount discount;
+}
+{
+  < TARGET >
+  p=point()
+  size=point()
+  v=value()
+  heading=value()
+  ireward=value()
+  discount=discount()
+  "\n"
+  {
+    Target target = new Target(d, p, size.x, v, heading, discount, ireward, true);
+  }
+}
+
+Discount discount() :
+{  Discount discount;
+}
+{  discount=deadline()
+  {    return discount;
+  }
+}
+
+DeadlineDiscount deadline() :{  double alpha;
+  double beta;
+  double d;
+}
+{  < DEADLINE > alpha=value() beta=value() d=value()
+  {    return new DeadlineDiscount(alpha, beta, d);
+  }}
+
+
+Point point() :
+{
+  double x;
+  double y;
+}
+{  "(" x=value() "," y=value() ")"
+  {    return new Point(x, y);
+  }
+}
+
+double value() :
+{  Token t;
+}
+{  t=< FLOATING_POINT_LITERAL >
+  {    return Double.parseDouble(t.image);
+  }
+}
+
+int integer() :
+{  Token t;
+}
+{  t=< INT_LITERAL >
+  {    return Integer.parseInt(t.image);
+  }
+}

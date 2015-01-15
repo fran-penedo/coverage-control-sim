@@ -44,4 +44,9 @@ public class DeadlineDiscount implements Discount {
 	public double getDeadline() {
 		return d;
 	}
+
+	@Override
+	public String toCode() {
+		return "Deadline " + alpha + " " + beta + " " + d;
+	}
 }

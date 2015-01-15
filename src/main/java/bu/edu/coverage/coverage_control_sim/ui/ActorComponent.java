@@ -20,14 +20,16 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  */
 public class ActorComponent extends JComponent {
 
-	protected final Actor a;
+	protected final Tableau tableau;
+	protected final Actor actor;
 	protected boolean selected;
 
 	/**
 	 * 
 	 */
-	public ActorComponent(Actor a) {
-		this.a = a;
+	public ActorComponent(Tableau tableau, Actor a) {
+		this.tableau = tableau;
+		this.actor = a;
 		this.selected = false;
 		setActorBounds();
 
@@ -39,14 +41,14 @@ public class ActorComponent extends JComponent {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		a.paint(g);
+		actor.paint(g);
 		setActorBounds();
 
 	}
 
 	public void setActorBounds() {
-		Point p = a.getPos();
-		Point size = a.getSize();
+		Point p = actor.getPos();
+		Point size = actor.getSize();
 		int x = (int) p.x;
 		int y = (int) p.y;
 		int w = (int) size.x;
@@ -68,7 +70,7 @@ public class ActorComponent extends JComponent {
 	}
 
 	protected void moveActor(Point npos) {
-		a.setPos(a.getPos().add(npos));
+		actor.setPos(actor.getPos().add(npos));
 	}
 
 	private class ACMouseAdapter extends MouseInputAdapter {
@@ -92,7 +94,6 @@ public class ActorComponent extends JComponent {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.err.println("pressed");
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				source = new Point(e.getX(), e.getY());
 			}
@@ -102,7 +103,7 @@ public class ActorComponent extends JComponent {
 		public void mouseDragged(MouseEvent e) {
 			Point npoint = new Point(e.getX(), e.getY());
 			moveActor(npoint.diff(source));
-			repaint();
+			tableau.repaint();
 		}
 
 		private void mouseClicked2(MouseEvent e) {
@@ -110,8 +111,17 @@ public class ActorComponent extends JComponent {
 		}
 
 		private void mouseClicked1(MouseEvent e) {
-			setSelected(true);
+			tableau.select(ActorComponent.this);
 		}
 
+	}
+
+	public void remove() {
+		actor.destroy();
+		tableau.remove(this);
+	}
+
+	public Actor getActor() {
+		return actor;
 	}
 }

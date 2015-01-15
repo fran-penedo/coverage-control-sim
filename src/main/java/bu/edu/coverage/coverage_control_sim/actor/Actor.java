@@ -7,6 +7,8 @@ import java.awt.Graphics;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
+import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -33,6 +35,10 @@ public abstract class Actor {
 		this(director, new Point(100, 100), new Point(50, 50));
 	}
 
+	public Actor(Director director, Actor actor) {
+		this(director, actor.p, actor.size);
+	}
+
 	public void postEvent(Event e) {
 		director.postEvent(e);
 	}
@@ -44,7 +50,7 @@ public abstract class Actor {
 			break;
 		}
 		default: {
-			System.err.println("Unhandled event in actor " + id + ": " + e);
+			// System.err.println("Unhandled event in actor " + id + ": " + e);
 			break;
 		}
 		}
@@ -66,6 +72,10 @@ public abstract class Actor {
 		return p;
 	}
 
+	public void setPos(Point npos) {
+		this.p = npos;
+	}
+
 	public Point getSize() {
 		return size;
 	}
@@ -76,6 +86,15 @@ public abstract class Actor {
 
 	public int getId() {
 		return id;
+	}
+
+	public void destroy() {
+		director.removeActor(this);
+	}
+
+	public String toCode() {
+		return this.getClass().getSimpleName() + " " + p.toCode() + " "
+				+ size.toCode();
 	}
 
 	@Override
@@ -100,8 +119,8 @@ public abstract class Actor {
 		return true;
 	}
 
-	public void setPos(Point npos) {
-		this.p = npos;
-	}
+	public abstract Actor deepCopy(Director d);
+
+	public abstract ActorInfo getInfoPanel(Tableau tableau);
 
 }

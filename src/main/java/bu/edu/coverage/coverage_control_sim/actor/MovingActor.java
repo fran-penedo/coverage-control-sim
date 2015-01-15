@@ -55,12 +55,25 @@ public abstract class MovingActor extends Actor {
 		return v;
 	}
 
+	public void setV(double v) {
+		this.v = v;
+	}
+
+	public double getHeading() {
+		return heading;
+	}
+
 	@Override
 	protected void updateEvent(Event e) {
 		double last = this.last_update;
 
 		super.updateEvent(e);
 		this.move(e.due - last);
+	}
+
+	@Override
+	public String toCode() {
+		return super.toCode() + " " + v + " " + heading;
 	}
 
 }

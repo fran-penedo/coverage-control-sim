@@ -11,6 +11,9 @@ import bu.edu.coverage.coverage_control_sim.control.Discount;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
+import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
+import bu.edu.coverage.coverage_control_sim.ui.TargetInfo;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -95,6 +98,22 @@ public class Target extends MovingActor {
 		this.active = active;
 	}
 
+	public double getIReward() {
+		return ireward;
+	}
+
+	public void setIReward(double ireward) {
+		this.ireward = ireward;
+	}
+
+	public Discount getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Discount discount) {
+		this.discount = discount;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -121,6 +140,21 @@ public class Target extends MovingActor {
 	@Override
 	public String toString() {
 		return p.toString();
+	}
+
+	@Override
+	public String toCode() {
+		return super.toCode() + " " + ireward + " " + discount.toCode();
+	}
+
+	@Override
+	public Actor deepCopy(Director d) {
+		return new Target(this, d);
+	}
+
+	@Override
+	public ActorInfo getInfoPanel(Tableau tableau) {
+		return TargetInfo.getTargetInfo(this, tableau);
 	}
 
 }

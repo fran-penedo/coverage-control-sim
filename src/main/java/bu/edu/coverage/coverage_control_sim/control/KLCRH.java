@@ -26,9 +26,9 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  *
  */
 public class KLCRH extends Control {
-	public final int K;
-	public double delta;
-	public int b;
+	protected int K;
+	protected double delta;
+	protected int b;
 	protected HashSet<Agent> neighbors;
 
 	/**
@@ -38,7 +38,6 @@ public class KLCRH extends Control {
 		this.K = K;
 		this.delta = delta;
 		this.b = b;
-		this.neighbors = new HashSet<>();
 	}
 
 	public KLCRH() {
@@ -47,6 +46,7 @@ public class KLCRH extends Control {
 
 	@Override
 	public void init() {
+		this.neighbors = new HashSet<>();
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
 				.getDirector().getCurrentTime() + 0.2, agent, EType.CONTROL));
 	}
@@ -289,6 +289,51 @@ public class KLCRH extends Control {
 		return ret;
 	}
 
+	/**
+	 * @return the k
+	 */
+	public int getK() {
+		return K;
+	}
+
+	/**
+	 * @param k
+	 *            the k to set
+	 */
+	public void setK(int k) {
+		K = k;
+	}
+
+	/**
+	 * @return the delta
+	 */
+	public double getDelta() {
+		return delta;
+	}
+
+	/**
+	 * @param delta
+	 *            the delta to set
+	 */
+	public void setDelta(double delta) {
+		this.delta = delta;
+	}
+
+	/**
+	 * @return the b
+	 */
+	public int getB() {
+		return b;
+	}
+
+	/**
+	 * @param b
+	 *            the b to set
+	 */
+	public void setB(int b) {
+		this.b = b;
+	}
+
 	protected class Heading {
 		public final ArrayList<Double> heading;
 		public final double reward;
@@ -372,6 +417,16 @@ public class KLCRH extends Control {
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	@Override
+	public String toCode() {
+		return super.toCode() + " " + K + " " + delta + " " + b;
+	}
+
+	@Override
+	public Control deepCopy() {
+		return new KLCRH(K, delta, b);
 	}
 
 }

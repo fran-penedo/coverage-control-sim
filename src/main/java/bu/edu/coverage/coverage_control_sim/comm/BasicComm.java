@@ -19,6 +19,7 @@ public class BasicComm extends Communication {
 
 	@Override
 	public void init() {
+		super.init();
 		double now = agent.getDirector().getCurrentTime();
 		for (Actor a : agent.getDirector().getActors()) {
 			agent.postEvent(new Event(now, now, a, EType.AGENT, agent));
@@ -110,6 +111,11 @@ public class BasicComm extends Communication {
 		if (agent.getControl() != null) {
 			agent.getControl().addNeighbor((Agent) msg.payload);
 		}
+	}
+
+	@Override
+	public Communication deepCopy() {
+		return new BasicComm();
 	}
 
 }

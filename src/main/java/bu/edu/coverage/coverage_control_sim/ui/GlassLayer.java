@@ -1,10 +1,10 @@
 package bu.edu.coverage.coverage_control_sim.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 /**
  * A wrapper Container for holding components that use a background Color
@@ -21,17 +21,32 @@ import javax.swing.JPanel;
  * background Color of the Component.
  */
 public class GlassLayer extends JComponent {
-	private JPanel panel;
+	protected InfoLayer fg;
 	public final boolean opaque;
 
-	public GlassLayer(boolean opaque) {
+	public GlassLayer(InfoLayer fg, boolean opaque) {
 		this.opaque = opaque;
-		panel = new JPanel();
+		this.fg = fg;
 		setLayout(new BorderLayout());
 		setOpaque(false);
-		panel.setOpaque(false);
-		add(panel);
+		if (fg != null) {
+			fg.setOpaque(false);
+			add(fg);
+		}
+	}
 
+	public void update() {
+		if (fg != null) {
+			fg.update();
+		}
+	}
+
+	@Override
+	public void setPreferredSize(Dimension preferredSize) {
+		super.setPreferredSize(preferredSize);
+		if (fg != null) {
+			fg.setPreferredSize(preferredSize);
+		}
 	}
 
 	/**
@@ -40,8 +55,8 @@ public class GlassLayer extends JComponent {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		if (opaque) {
-			g.setColor(panel.getBackground());
+		if (opaque && fg != null) {
+			g.setColor(fg.getBackground());
 			g.fillRect(0, 0, getWidth(), getHeight());
 		} else {
 			super.paintComponent(g);

@@ -12,11 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import bu.edu.coverage.coverage_control_sim.actor.Agent;
-import bu.edu.coverage.coverage_control_sim.event.Director;
-import bu.edu.coverage.coverage_control_sim.ui.ActorComponent;
-import bu.edu.coverage.coverage_control_sim.util.Point;
-
 public class Click extends Applet {
 
 	// public static void main(String[] args) {
@@ -76,9 +71,9 @@ public class Click extends Applet {
 		// p2.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		// p2.setBounds(0, 0, 400, 400);
 
-		ActorComponent p2 = new ActorComponent(new Agent(new Director(),
-				new Point(225, 225), new Point(400, 400), 0, 0));
-		p.add(p2);
+		// ActorComponent p2 = new ActorComponent(new Agent(new Director(),
+		// new Point(225, 225), new Point(400, 400), 0, 0));
+		// p.add(p2);
 
 		// addMouseListener(new MouseInputAdapter() {
 		// @Override

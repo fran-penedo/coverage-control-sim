@@ -40,6 +40,10 @@ public class MasterSense extends BasicSense {
 
 	}
 
+	public double getReward() {
+		return total_reward;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -53,4 +57,8 @@ public class MasterSense extends BasicSense {
 		total_reward += reward;
 	}
 
+	@Override
+	public Sense deepCopy() {
+		return new MasterSense();
+	}
 }

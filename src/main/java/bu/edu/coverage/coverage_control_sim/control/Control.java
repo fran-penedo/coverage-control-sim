@@ -33,4 +33,10 @@ public abstract class Control {
 	 */
 	public abstract void addNeighbor(Agent agent);
 
+	public String toCode() {
+		return "";
+	}
+
+	public abstract Control deepCopy();
+
 }

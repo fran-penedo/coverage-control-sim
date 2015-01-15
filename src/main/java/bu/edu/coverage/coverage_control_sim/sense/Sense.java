@@ -19,10 +19,11 @@ public abstract class Sense {
 
 	public void attach(Agent a) {
 		this.agent = a;
-		targets = new ArrayList<Target>();
 	}
 
-	public abstract void init();
+	public void init() {
+		targets = new ArrayList<Target>();
+	}
 
 	public abstract void sense();
 
@@ -35,4 +36,10 @@ public abstract class Sense {
 	}
 
 	public abstract void visited(Target target, double reward);
+
+	public String toCode() {
+		return "";
+	}
+
+	public abstract Sense deepCopy();
 }

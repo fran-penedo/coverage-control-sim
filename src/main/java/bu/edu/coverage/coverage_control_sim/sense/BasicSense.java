@@ -24,6 +24,7 @@ public class BasicSense extends Sense {
 
 	@Override
 	public void init() {
+		super.init();
 		active = new ArrayList<Target>();
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
 				.getDirector().getCurrentTime(), agent, EType.SENSE));
@@ -67,6 +68,11 @@ public class BasicSense extends Sense {
 	@Override
 	public void visited(Target target, double reward) {
 		active.remove(target);
+	}
+
+	@Override
+	public Sense deepCopy() {
+		return new BasicSense(sample_t);
 	}
 
 }

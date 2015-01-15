@@ -86,6 +86,11 @@ public class Director {
 		initialized = false;
 	}
 
+	public void removeActor(Actor actor) {
+		actors.remove(actor);
+		initialized = false;
+	}
+
 	public double getCurrentTime() {
 		return time;
 	}
@@ -96,5 +101,21 @@ public class Director {
 
 	public int getUniqueID() {
 		return ++last_id;
+	}
+
+	public String toCode() {
+		String s = "";
+		for (Actor a : actors) {
+			s = s + a.toCode() + "\n";
+		}
+		return s;
+	}
+
+	public Director deepCopy() {
+		Director d = new Director(this.getCurrentTime());
+		for (Actor a : actors) {
+			a.deepCopy(d);
+		}
+		return d;
 	}
 }
