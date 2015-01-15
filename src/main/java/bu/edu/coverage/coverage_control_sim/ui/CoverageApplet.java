@@ -16,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -103,7 +105,13 @@ public class CoverageApplet extends Applet implements ActionListener {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(800, 800));
 
-		fc = new JFileChooser();
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
+			@Override
+			public Object run() {
+				fc = new JFileChooser();
+				return null;
+			}
+		});
 
 		Director d = new Director();
 		t = new Tableau(SIZE, SIZE, d);

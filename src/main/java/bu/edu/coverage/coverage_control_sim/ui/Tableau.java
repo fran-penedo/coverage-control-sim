@@ -115,7 +115,9 @@ public class Tableau extends JPanel implements ActionListener {
 	}
 
 	public void resume() {
-		timer.start();
+		if (started) {
+			timer.start();
+		}
 	}
 
 	public void restart() {
