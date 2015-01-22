@@ -41,6 +41,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 	public static final String SAVE = "Save";
 	public static final String START = "Start";
 	public static final String RESTART = "Restart";
+	public static final String RESET = "Reset";
 	public static final String PAUSE = "Pause";
 	public static final String RESUME = "Resume";
 	public static final String SELECT = "Select";
@@ -182,6 +183,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		createButton(RESUME, control, this);
 		createButton(PAUSE, control, this);
 		createButton(RESTART, control, this);
+		createButton(RESET, control, this);
 
 		return control;
 	}
@@ -269,6 +271,10 @@ public class CoverageApplet extends Applet implements ActionListener {
 		}
 		case RESTART: {
 			t.restart();
+			break;
+		}
+		case RESET: {
+			t.reset();
 			break;
 		}
 		case PAUSE: {

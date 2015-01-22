@@ -6,16 +6,12 @@ package bu.edu.coverage.coverage_control_sim.event;
 import java.util.PriorityQueue;
 
 /**
- * @author fran
+ * Director's event queue. Just a plain priority queue.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class EventQueue extends PriorityQueue<Event> {
-
-	/**
-	 * 
-	 */
-	public EventQueue() {
-		// TODO Auto-generated constructor stub
-	}
+	private static final long serialVersionUID = 1L;
 
 }

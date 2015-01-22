@@ -8,16 +8,32 @@ import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * An actor that can move by itself.
+ * 
+ * NOTE: This could be non abstract as well.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public abstract class MovingActor extends Actor {
-	/**
-	 * Velocity in m/s
-	 */
-	protected double v;
-	protected double heading;
+	protected double v; // speed in m/s
+	protected double heading; // heading in radians
 
+	/**
+	 * Creates a moving actor in the given director, with position p, size size,
+	 * speed v, and heading heading.
+	 * 
+	 * @param director
+	 *            The director to add the actor to
+	 * @param p
+	 *            The position of the actor
+	 * @param size
+	 *            The size of the actor
+	 * @param v
+	 *            The speed of the actor in m/s
+	 * @param heading
+	 *            The heading of the actor in radians
+	 */
 	public MovingActor(Director director, Point p, Point size, double v,
 			double heading) {
 		super(director, p, size);
@@ -26,17 +42,20 @@ public abstract class MovingActor extends Actor {
 	}
 
 	/**
-	 * @param id
+	 * Creates a copy of this actor and adds the copy to the given director.
+	 * 
+	 * @param director
+	 *            The director to add the copy to
 	 */
 	public MovingActor(Director director) {
 		this(director, new Point(100, 100), new Point(50, 50), 0, 0);
 	}
 
 	/**
-	 * Moves t seconds
+	 * Moves t seconds.
 	 * 
 	 * @param t
-	 *            time
+	 *            The time to move
 	 * 
 	 *            FIXME boundaries, collisions?
 	 */
@@ -47,18 +66,35 @@ public abstract class MovingActor extends Actor {
 		this.p = new Point(x, y);
 	}
 
+	// Gets the velocity vector
 	protected Point getVelocity() {
 		return new Point(v * Math.cos(heading), v * Math.sin(heading));
 	}
 
+	/**
+	 * Gets the speed.
+	 * 
+	 * @return The speed
+	 */
 	public double getV() {
 		return v;
 	}
 
+	/**
+	 * Sets the speed.
+	 * 
+	 * @param v
+	 *            The new speed.
+	 */
 	public void setV(double v) {
 		this.v = v;
 	}
 
+	/**
+	 * Gets the heading.
+	 * 
+	 * @return The heading.
+	 */
 	public double getHeading() {
 		return heading;
 	}
@@ -68,7 +104,7 @@ public abstract class MovingActor extends Actor {
 		double last = this.last_update;
 
 		super.updateEvent(e);
-		this.move(e.due - last);
+		this.move(last_update - last); // Use the logic in super method
 	}
 
 	@Override

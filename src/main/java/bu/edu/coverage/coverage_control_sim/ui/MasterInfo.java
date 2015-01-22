@@ -51,6 +51,9 @@ public class MasterInfo extends ActorInfo {
 		MasterSense s = (MasterSense) m.getSense();
 		fields.get(J).setText("" + s.getReward());
 		fields.get(TIME).setText("" + tableau.getDirector().getCurrentTime());
+		if (s.getTargets() != null && s.getTargets().isEmpty()) {
+			tableau.pause();
+		}
 
 	}
 

@@ -11,11 +11,20 @@ import bu.edu.coverage.coverage_control_sim.ui.MasterInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 
 /**
- * @author fran
+ * A hidden agent intended for simulation bookkeeping and taking the agent
+ * leader role in simplified scenarios with no leader selection.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class MasterAgent extends Agent {
 
+	/**
+	 * Creates a master agent and adds it to the given director.
+	 * 
+	 * @param director
+	 *            The director to add the master agent to
+	 */
 	public MasterAgent(Director director) {
 		super(director);
 		v = 0;

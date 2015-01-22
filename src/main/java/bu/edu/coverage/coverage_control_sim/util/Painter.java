@@ -9,28 +9,45 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 
 /**
- * @author fran
+ * A class with painting methods
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class Painter {
 
+	/**
+	 * Thick stroke.
+	 */
 	public static final Stroke thickStroke = new BasicStroke(5.0f,
 			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	/**
+	 * Thin stroke.
+	 */
 	public static final Stroke thinStroke = new BasicStroke(1.0f,
 			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	/**
+	 * Medium stroke.
+	 */
 	public static final Stroke mediumStroke = new BasicStroke(3.0f,
 			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	/**
+	 * Size of the heading indicator.
+	 */
 	public static final int DIRECTION_POINTER_SIZE = 6;
 
 	/**
+	 * Draws a star centered in center inscribed in a square of side length
+	 * size in the given color.
 	 * 
+	 * @param g
+	 *            The graphics object
+	 * @param size
+	 *            The size of the square
+	 * @param color
+	 *            The color of the star
 	 */
-	public Painter() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public static void drawStar(Graphics2D g, Point center, double size,
-			Color color) {
+	public static void drawStar(Graphics2D g, double size, Color color) {
 		Stroke pstroke = g.getStroke();
 		Color pcolor = g.getColor();
 		g.setStroke(mediumStroke);
@@ -65,10 +82,21 @@ public class Painter {
 		g.setColor(pcolor);
 	}
 
-	public static void drawTarget(Graphics2D g, Point center, double size,
-			int id, Color color) {
+	/**
+	 * Draws a target: a star with the id inside.
+	 * 
+	 * @param g
+	 *            The graphics object
+	 * @param size
+	 *            The size of the square
+	 * @param id
+	 *            The id of the target
+	 * @param color
+	 *            The color of the star
+	 */
+	public static void drawTarget(Graphics2D g, double size, int id, Color color) {
 		Color pcolor = g.getColor();
-		drawStar(g, center, size, color);
+		drawStar(g, size, color);
 		g.setColor(Color.black);
 		g.drawString("" + id,
 				(int) size / 2 - g.getFontMetrics().stringWidth("" + id) / 2,
@@ -76,8 +104,22 @@ public class Painter {
 		g.setColor(pcolor);
 	}
 
-	public static void drawAgent(Graphics2D g, Point center, Point size,
-			double heading, int id, Color color) {
+	/**
+	 * Draws an agent: a circle with the id and an indicator of the heading.
+	 * 
+	 * @param g
+	 *            The graphics object
+	 * @param size
+	 *            The size of the agent
+	 * @param heading
+	 *            The heading of the agent
+	 * @param id
+	 *            The id of the agent
+	 * @param color
+	 *            The color of the circle
+	 */
+	public static void drawAgent(Graphics2D g, Point size, double heading,
+			int id, Color color) {
 		Color pcolor = g.getColor();
 		g.setColor(color);
 
@@ -102,6 +144,15 @@ public class Painter {
 		g.setColor(pcolor);
 	}
 
+	/**
+	 * Creates a color mixing color a and b with the amount of a given by rate
+	 * 
+	 * @param a
+	 * @param b
+	 * @param rate
+	 *            The amount of color a. Should be between 0 and 1
+	 * @return A mixed color from a and b
+	 */
 	public static Color getMixedColor(Color a, Color b, double rate) {
 		if (rate < 0) {
 			System.err.println("Rate < 0");

@@ -272,7 +272,8 @@ public class KLCRH extends Control {
 	}
 
 	protected double targetTravelCost(Target t, Point x, List<Target> targets) {
-		return x.dist(t.getPos()) / (t.ireward / t.discount.getDeadline())
+		return x.dist(t.getPos())
+				/ (t.getIReward() / t.getDiscount().getDeadline())
 				+ targetCostFactor(t, targets);
 
 	}
@@ -283,7 +284,7 @@ public class KLCRH extends Control {
 			if (ts.isActive()) {
 				// FIXME gamma
 				ret += t.getPos().dist(ts.getPos())
-						/ (ts.ireward / ts.discount.getDeadline());
+						/ (ts.getIReward() / ts.getDiscount().getDeadline());
 			}
 		}
 		return ret;

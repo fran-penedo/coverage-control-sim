@@ -126,8 +126,16 @@ public class Tableau extends JPanel implements ActionListener {
 		setDirector(saved);
 	}
 
+	public void reset() {
+		saved = new Director();
+		restart();
+		addMaster();
+	}
+
 	public void pause() {
-		timer.stop();
+		if (started) {
+			timer.stop();
+		}
 	}
 
 	public void setMode(Mode mode) {

@@ -18,18 +18,54 @@ import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * A moving target with a one time reward.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class Target extends MovingActor {
+	/**
+	 * Color when full active.
+	 */
 	public static final Color ACTIVE_COLOR = Color.red;
+	/**
+	 * Color when full inactive.
+	 */
 	public static final Color INACTIVE_COLOR = Color.gray;
 
-	public Discount discount;
-	public double ireward;
+	/**
+	 * The discount function of this target.
+	 */
+	protected Discount discount;
+	/**
+	 * The initial reward of this target.
+	 */
+	protected double ireward;
 
 	protected boolean active;
 
+	/**
+	 * Creates a target in the given director, in the position p, with size
+	 * size, speed v, heading heading, discount function discount, initial
+	 * reward ireward and possibly inactive.
+	 * 
+	 * @param director
+	 *            The director to add this target to
+	 * @param p
+	 *            The position of the target
+	 * @param size
+	 *            The size of the target. It will be a square
+	 * @param v
+	 *            The speed of the target
+	 * @param heading
+	 *            The heading of the target
+	 * @param discount
+	 *            The discount function of the target
+	 * @param ireward
+	 *            The initial reward of the target
+	 * @param active
+	 *            The initial state of the target
+	 */
 	public Target(Director director, Point p, double size, double v,
 			double heading, Discount discount, double ireward, boolean active) {
 		super(director, p, new Point(size, size), v, heading);
@@ -38,6 +74,14 @@ public class Target extends MovingActor {
 		this.active = active;
 	}
 
+	/**
+	 * Copies the target and adds the copy to the given director.
+	 * 
+	 * @param t
+	 *            The target to copy
+	 * @param director
+	 *            The director to add the copy to
+	 */
 	public Target(Target t, Director director) {
 		this(director, t.p, t.size.x, t.v, t.heading, t.discount, t.ireward,
 				t.active);
@@ -67,71 +111,132 @@ public class Target extends MovingActor {
 
 	}
 
+	// Handles an agent visiting the target
 	protected void visitEvent(Event e) {
-		if (isActive()) {
+		if (isActive()) { // Only if the agent visiting is the first
 			setActive(false);
 			Agent a = (Agent) e.payload;
-			VisitEventInfo info = new VisitEventInfo(this,
+			// Confirm to agent that he has visited the target
+			VisitedEventInfo info = new VisitedEventInfo(this,
 					getReward(director.getCurrentTime()));
 			postEvent(new Event(director.getCurrentTime(),
 					director.getCurrentTime(), a, EType.VISITED, info));
 		}
 	}
 
+	/**
+	 * Computes if a point is in range to visit the target.
+	 * 
+	 * @param point
+	 *            A point
+	 * @return If the point is in range
+	 */
 	public boolean inRange(Point point) {
 		return this.p.dist(point) <= size.x / 2;
 	}
 
+	/**
+	 * Gets the reward corresponding to the given time from this target. It will
+	 * only return the reward, the target will not change its state.
+	 * 
+	 * @param t
+	 *            The time for computing the reward
+	 * @return The reward corresponding to the time
+	 */
 	public double getReward(double t) {
 		return ireward * discount.eval(t);
 	}
 
+	/**
+	 * Gets the active status.
+	 * 
+	 * @return The active status
+	 */
 	public boolean isActive() {
 		return active;
 	}
 
-	public void visit() {
-		active = false;
-	}
-
+	/**
+	 * Sets the active status.
+	 * 
+	 * @param active
+	 *            The new active status
+	 */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	/**
+	 * Gets the initial reward.
+	 * 
+	 * @return The initial reward
+	 */
 	public double getIReward() {
 		return ireward;
 	}
 
+	/**
+	 * Sets the initial reward.
+	 * 
+	 * @param ireward
+	 *            The initial reward
+	 */
 	public void setIReward(double ireward) {
 		this.ireward = ireward;
 	}
 
+	/**
+	 * Gets the discount function.
+	 * 
+	 * @return The discount function
+	 */
 	public Discount getDiscount() {
 		return discount;
 	}
 
+	/**
+	 * Sets the discount function.
+	 * 
+	 * @param discount
+	 *            The discount function
+	 */
 	public void setDiscount(Discount discount) {
 		this.discount = discount;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see coverage.actor.Actor#paint(java.awt.Graphics)
-	 */
 	@Override
 	public void paint(Graphics g) {
 		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
 				INACTIVE_COLOR, getReward(last_update) / ireward)
 				: INACTIVE_COLOR;
-		Painter.drawTarget((Graphics2D) g, p, size.x, id, color);
+		Painter.drawTarget((Graphics2D) g, size.x, id, color);
 	}
 
-	public class VisitEventInfo {
+	/**
+	 * Payload for visited events
+	 * 
+	 * @author Francisco Penedo (franp@bu.edu)
+	 *
+	 */
+	public class VisitedEventInfo {
+		/**
+		 * The target visited.
+		 */
 		public final Target target;
+		/**
+		 * The reward collected.
+		 */
 		public final double reward;
 
-		public VisitEventInfo(Target target, double reward) {
+		/**
+		 * Creates the payload for a visited event.
+		 * 
+		 * @param target
+		 *            The target visited
+		 * @param reward
+		 *            The reward collected
+		 */
+		public VisitedEventInfo(Target target, double reward) {
 			this.target = target;
 			this.reward = reward;
 		}

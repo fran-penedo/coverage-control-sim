@@ -12,7 +12,7 @@ import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 /**
  * Simple Communication scheme. No relay.
  * 
- * @author fran
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class BasicComm extends Communication {
@@ -26,13 +26,6 @@ public class BasicComm extends Communication {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * bu.edu.coverage.coverage_control_sim.comm.Communication#send(bu.edu.coverage
-	 * .coverage_control_sim.comm.Message)
-	 */
 	public void send(Message msg) {
 		if (msg.to == Message.BC) {
 			for (Agent a : known.values()) {
@@ -44,6 +37,7 @@ public class BasicComm extends Communication {
 		}
 	}
 
+	// Send to one
 	protected void sendSingle(Message msg) {
 		double time = agent.getDirector().getCurrentTime();
 		Event event = new Event(time, time, known.get(msg.to), EType.MESSAGE,
@@ -51,13 +45,6 @@ public class BasicComm extends Communication {
 		agent.postEvent(event);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * bu.edu.coverage.coverage_control_sim.comm.Communication#receive(bu.edu
-	 * .coverage.coverage_control_sim.comm.Message)
-	 */
 	public void receive(Message msg) {
 		if (msg.to == Message.BC || msg.to == agent.getId()) {
 			process(msg);
@@ -83,31 +70,31 @@ public class BasicComm extends Communication {
 			break;
 		}
 		default: {
-			System.err.println(); // FIXME
+			// System.err.println(); // FIXME
 			break;
 		}
 		}
 	}
 
-	public void processPing(Message msg) {
+	protected void processPing(Message msg) {
 		Agent a = (Agent) msg.payload;
 		known.put(a.getId(), a);
 	}
 
-	public void processVisited(Message msg) {
+	protected void processVisited(Message msg) {
 		if (agent.getSense() != null) {
 			VisitedMsgInfo info = (VisitedMsgInfo) msg.payload;
 			agent.getSense().visited(info.target, info.reward);
 		}
 	}
 
-	public void processControl(Message msg) {
+	protected void processControl(Message msg) {
 		if (agent.getControl() != null) {
 			agent.getControl().setHeading((Double) msg.payload);
 		}
 	}
 
-	public void processJoinControl(Message msg) {
+	protected void processJoinControl(Message msg) {
 		if (agent.getControl() != null) {
 			agent.getControl().addNeighbor((Agent) msg.payload);
 		}
