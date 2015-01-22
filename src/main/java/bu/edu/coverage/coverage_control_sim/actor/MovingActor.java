@@ -7,7 +7,8 @@ import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * An actor that can move by itself.
+ * An actor that can move by itself. Always use getPos() to retrieve position,
+ * as it performs the computation of the real position at the current time.
  * 
  * NOTE: This could be non abstract as well.
  * 

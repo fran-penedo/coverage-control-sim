@@ -4,16 +4,32 @@
 package bu.edu.coverage.coverage_control_sim.control;
 
 /**
- * @author fran
+ * A discount function of the form:
+ * 
+ * FIXME
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class DeadlineDiscount implements Discount {
 
-	public final double alpha; // reward lost at deadline
-	public final double beta; // exponential rate after deadline
-	public final double d; // deadline
+	/**
+	 * Alpha parameter. Controls the reward lost at deadline.
+	 */
+	public final double alpha;
+	/**
+	 * Beta parameter. Defines the exponential rate of discount after the
+	 * deadline.
+	 */
+	public final double beta;
+	/**
+	 * Deadline time.
+	 */
+	public final double d;
 
 	/**
+	 * Creates a deadline discount function with the given parameters.
+	 * 
 	 * @param alpha
 	 * @param beta
 	 * @param d
@@ -45,7 +61,6 @@ public class DeadlineDiscount implements Discount {
 		return d;
 	}
 
-	@Override
 	public String toCode() {
 		return "Deadline " + alpha + " " + beta + " " + d;
 	}

@@ -27,7 +27,7 @@ import bu.edu.coverage.coverage_control_sim.comm.BasicComm;
 import bu.edu.coverage.coverage_control_sim.control.DeadlineDiscount;
 import bu.edu.coverage.coverage_control_sim.control.Discount;
 import bu.edu.coverage.coverage_control_sim.control.KLCRH;
-import bu.edu.coverage.coverage_control_sim.control.KLCRHClient;
+import bu.edu.coverage.coverage_control_sim.control.ControlClient;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.sense.BasicSense;
 import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
@@ -175,7 +175,7 @@ public class Tableau extends JPanel implements ActionListener {
 		Agent a = new Agent(d, p, size, v, heading);
 		a.setCommunication(new BasicComm());
 		a.setSense(new BasicSense(1));
-		a.setControl(new KLCRHClient());
+		a.setControl(new ControlClient());
 		ActorComponent ac = new ActorComponent(this, a);
 		add(ac);
 	}

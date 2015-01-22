@@ -10,10 +10,13 @@ import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 
 /**
- * @author fran
+ * A control module for agents listening to the control signals obtained with
+ * a centralized algorithm.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
-public class KLCRHClient extends Control {
+public class ControlClient extends Control {
 
 	@Override
 	public void init() {
@@ -22,11 +25,6 @@ public class KLCRHClient extends Control {
 		agent.postEvent(new Event(now, now + 0.1, agent, EType.CONTROL));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bu.edu.coverage.coverage_control_sim.control.Control#control()
-	 */
 	@Override
 	public void control() {
 		if (agent.getCommunication() != null) {
@@ -51,7 +49,7 @@ public class KLCRHClient extends Control {
 
 	@Override
 	public Control deepCopy() {
-		return new KLCRHClient();
+		return new ControlClient();
 	}
 
 }

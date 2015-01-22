@@ -13,7 +13,9 @@ import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 
 /**
- * @author fran
+ * Creates a partition of the targets and associates each group to an agent.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class Partition {
@@ -22,7 +24,13 @@ public class Partition {
 	protected int b;
 
 	/**
+	 * Creates a partition of the targets associated with the agents with a
+	 * diffusion parameter delta and neighbor size b.
 	 * 
+	 * @param agents
+	 * @param targets
+	 * @param delta
+	 * @param b
 	 */
 	public Partition(List<Agent> agents, List<Target> targets, double delta,
 			int b) {
@@ -31,6 +39,13 @@ public class Partition {
 		partitions(agents, targets);
 	}
 
+	/**
+	 * Gets the group of targets associated to an agent in the partition.
+	 * 
+	 * @param a
+	 *            The agent
+	 * @return A group of targets
+	 */
 	public ArrayList<Target> getPartition(Agent a) {
 		return map.get(a);
 	}
@@ -42,10 +57,13 @@ public class Partition {
 			ArrayList<Target> partition = new ArrayList<Target>();
 			for (Target t : targets) {
 				if (t.isActive()) {
+					// Get neighbor set
 					List<Agent> closeA = closestAgents(t, agents, b);
 					double sum = sumDist(t, closeA);
+					// Proximity of current agent
 					double p = proximity(a, t, closeA, sum);
 					boolean add = true;
+					// Check if current is the nearest
 					for (Iterator<Agent> it = closeA.iterator(); it.hasNext()
 							&& add;) {
 						Agent a2 = it.next();
@@ -99,6 +117,7 @@ public class Partition {
 		}
 	}
 
+	// Proximity function
 	protected double proximity(Agent a, Target t, List<Agent> closeA, double sum) {
 		double dist = relDist(a, t, closeA, sum);
 
@@ -111,6 +130,7 @@ public class Partition {
 		}
 	}
 
+	// Relative distance
 	protected double relDist(Agent a, Target t, List<Agent> closeA, double sum) {
 		return closeA.indexOf(a) == -1 ? 1 : a.getPos().dist(t.getPos()) / sum;
 	}

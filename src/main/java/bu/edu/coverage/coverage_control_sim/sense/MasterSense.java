@@ -6,12 +6,18 @@ package bu.edu.coverage.coverage_control_sim.sense;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 
 /**
- * @author fran
+ * The sensing module for a master agent keeping track of the total collected
+ * reward.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class MasterSense extends BasicSense {
 	protected double total_reward;
 
+	/**
+	 * Creates the sensing module for the master agent
+	 */
 	public MasterSense() {
 		super(0);
 		total_reward = 0;
@@ -40,6 +46,11 @@ public class MasterSense extends BasicSense {
 
 	}
 
+	/**
+	 * Obtains the total reward collected by the agents so far.
+	 * 
+	 * @return The total reward
+	 */
 	public double getReward() {
 		return total_reward;
 	}
