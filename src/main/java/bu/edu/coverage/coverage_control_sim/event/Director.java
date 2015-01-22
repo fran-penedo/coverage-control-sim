@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bu.edu.coverage.coverage_control_sim.actor.Actor;
-import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 
 /**
  * Simulation director class. Controls the simulation by dispatching events in
@@ -51,16 +50,6 @@ public class Director {
 			a.init();
 		}
 		initialized = true;
-	}
-
-	/**
-	 * Updates all actors (position, etc).
-	 */
-	public void updateAll() {
-		for (Actor actor : actors) {
-			queue.add(new Event(time, time, actor, EType.UPDATE));
-		}
-		runFor(0);
 	}
 
 	/**

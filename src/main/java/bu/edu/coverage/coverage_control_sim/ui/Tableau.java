@@ -272,7 +272,7 @@ public class Tableau extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		d.runFor(1);
-		d.updateAll();
+		// d.updateAll();
 		repaint();
 	}
 

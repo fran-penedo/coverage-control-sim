@@ -83,8 +83,8 @@ public class Target extends MovingActor {
 	 *            The director to add the copy to
 	 */
 	public Target(Target t, Director director) {
-		this(director, t.p, t.size.x, t.v, t.heading, t.discount, t.ireward,
-				t.active);
+		this(director, t.getPos(), t.getSize().x, t.getV(), t.getHeading(),
+				t.discount, t.ireward, t.active);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class Target extends MovingActor {
 	 * @return If the point is in range
 	 */
 	public boolean inRange(Point point) {
-		return this.p.dist(point) <= size.x / 2;
+		return this.getPos().dist(point) <= getSize().x / 2;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class Target extends MovingActor {
 
 	@Override
 	public String toString() {
-		return p.toString();
+		return getPos().toString();
 	}
 
 	@Override

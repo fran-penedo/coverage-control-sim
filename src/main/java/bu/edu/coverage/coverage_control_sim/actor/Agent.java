@@ -74,7 +74,7 @@ public class Agent extends MovingActor {
 	 *            The director to add the copy to
 	 */
 	public Agent(Agent a, Director director) {
-		this(director, a.p, a.size, a.v, a.heading);
+		this(director, a.getPos(), a.getSize(), a.getV(), a.getHeading());
 	}
 
 	@Override
@@ -244,16 +244,6 @@ public class Agent extends MovingActor {
 	}
 
 	/**
-	 * Sets the heading.
-	 * 
-	 * @param heading
-	 *            The new heading
-	 */
-	public void setHeading(double heading) {
-		this.heading = heading;
-	}
-
-	/**
 	 * Visited message payload.
 	 * 
 	 * @author Francisco Penedo (franp@bu.edu)
@@ -285,7 +275,7 @@ public class Agent extends MovingActor {
 
 	@Override
 	public String toString() {
-		return p.toString();
+		return getPos().toString();
 	}
 
 	@Override

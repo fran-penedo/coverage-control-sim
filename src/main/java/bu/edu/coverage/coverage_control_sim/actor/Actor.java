@@ -25,7 +25,6 @@ public abstract class Actor {
 	protected Point p; // Position
 	// TODO not so sure I like this
 	protected Point size; // Size of the rectangle covering the actor
-	protected double last_update;
 
 	/**
 	 * Creates an actor in the given director with position p and the given
@@ -44,7 +43,6 @@ public abstract class Actor {
 		this.p = p;
 		this.size = size;
 		director.addActor(this);
-		last_update = director.getCurrentTime();
 	}
 
 	/**
@@ -65,7 +63,7 @@ public abstract class Actor {
 	 *            The actor to copy
 	 */
 	public Actor(Director director, Actor actor) {
-		this(director, actor.p, actor.size);
+		this(director, actor.getPos(), actor.getSize());
 	}
 
 	/**
@@ -85,25 +83,13 @@ public abstract class Actor {
 	 *            The event to process
 	 */
 	public void fire(Event e) {
-		// Process each event type in its own method
+		// Process each event type in its own method. No events for general
+		// actors defined
 		switch (e.type) {
-		case UPDATE: {
-			updateEvent(e);
-			break;
-		}
 		default: {
 			// System.err.println("Unhandled event in actor " + id + ": " + e);
 			break;
 		}
-		}
-	}
-
-	// ignores updates to the past
-	protected void updateEvent(Event e) {
-		if (last_update > e.due) {
-
-		} else {
-			last_update = e.due;
 		}
 	}
 
@@ -121,7 +107,7 @@ public abstract class Actor {
 	public abstract void paint(Graphics g);
 
 	/**
-	 * Gets the position.
+	 * Gets the position of the actor for the current time
 	 * 
 	 * @return The position
 	 */
@@ -179,7 +165,7 @@ public abstract class Actor {
 	 * @return A string representing the actor
 	 */
 	public String toCode() {
-		return this.getClass().getSimpleName() + " " + p.toCode() + " "
+		return this.getClass().getSimpleName() + " " + getPos().toCode() + " "
 				+ size.toCode();
 	}
 

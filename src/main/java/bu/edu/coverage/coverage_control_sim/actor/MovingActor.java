@@ -4,7 +4,6 @@
 package bu.edu.coverage.coverage_control_sim.actor;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
-import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -18,6 +17,7 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 public abstract class MovingActor extends Actor {
 	protected double v; // speed in m/s
 	protected double heading; // heading in radians
+	protected double last_update; // movement base position
 
 	/**
 	 * Creates a moving actor in the given director, with position p, size size,
@@ -39,6 +39,7 @@ public abstract class MovingActor extends Actor {
 		super(director, p, size);
 		this.v = v;
 		this.heading = heading;
+		last_update = director.getCurrentTime();
 	}
 
 	/**
@@ -51,24 +52,24 @@ public abstract class MovingActor extends Actor {
 		this(director, new Point(100, 100), new Point(50, 50), 0, 0);
 	}
 
-	/**
-	 * Moves t seconds.
-	 * 
-	 * @param t
-	 *            The time to move
-	 * 
-	 *            FIXME boundaries, collisions?
-	 */
-	protected void move(double t) {
-		Point vel = getVelocity();
-		double x = this.p.x + t * vel.x;
-		double y = this.p.y + t * vel.y;
-		this.p = new Point(x, y);
-	}
-
 	// Gets the velocity vector
 	protected Point getVelocity() {
 		return new Point(v * Math.cos(heading), v * Math.sin(heading));
+	}
+
+	@Override
+	public Point getPos() {
+		double t = getDirector().getCurrentTime() - last_update;
+		Point vel = getVelocity();
+		double x = this.p.x + t * vel.x;
+		double y = this.p.y + t * vel.y;
+		return new Point(x, y);
+	}
+
+	@Override
+	public void setPos(Point npos) {
+		super.setPos(npos);
+		last_update = getDirector().getCurrentTime();
 	}
 
 	/**
@@ -87,6 +88,7 @@ public abstract class MovingActor extends Actor {
 	 *            The new speed.
 	 */
 	public void setV(double v) {
+		setPos(getPos());
 		this.v = v;
 	}
 
@@ -99,12 +101,15 @@ public abstract class MovingActor extends Actor {
 		return heading;
 	}
 
-	@Override
-	protected void updateEvent(Event e) {
-		double last = this.last_update;
-
-		super.updateEvent(e);
-		this.move(last_update - last); // Use the logic in super method
+	/**
+	 * Sets the heading.
+	 * 
+	 * @param heading
+	 *            The new heading
+	 */
+	public void setHeading(double heading) {
+		setPos(getPos());
+		this.heading = heading;
 	}
 
 	@Override

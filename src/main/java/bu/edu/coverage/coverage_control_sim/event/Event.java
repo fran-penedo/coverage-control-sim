@@ -116,10 +116,6 @@ public class Event implements Comparable<Event> {
 	 */
 	public enum EType {
 		/**
-		 * Periodic updates (movement, etc).
-		 */
-		UPDATE,
-		/**
 		 * Agent creation.
 		 */
 		AGENT,

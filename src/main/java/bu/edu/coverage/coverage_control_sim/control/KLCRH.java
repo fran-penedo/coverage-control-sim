@@ -157,7 +157,6 @@ public class KLCRH extends Control {
 			}
 
 			next_d.runFor(plan_h);
-			next_d.updateAll();
 
 			Heading cur = bestHeading(next_d, next_agents, next_targets,
 					remaining - 1);
