@@ -22,17 +22,28 @@ import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * Implements the K-Lookahead CRH algorithm.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class KLCRH extends Control {
-	protected int K;
-	protected double delta;
-	protected int b;
-	protected HashSet<Agent> neighbors;
+	protected int K; // Lookahead steps
+	protected double delta; // Partition fuzzy coefficient
+	protected int b; // Partition neighbor size
+	protected HashSet<Agent> neighbors; // Controlled agents
 
 	/**
+	 * Creates a control module implementing the K-Lookahead CRH algorithm. This
+	 * module will broadcast the computed control signals to the follower
+	 * agents.
 	 * 
+	 * @param K
+	 *            The number of lookahead steps
+	 * @param delta
+	 *            The fuzzy coefficient for the partitions
+	 * @param b
+	 *            The neighbor size for the partition
 	 */
 	public KLCRH(int K, double delta, int b) {
 		this.K = K;
@@ -40,6 +51,9 @@ public class KLCRH extends Control {
 		this.b = b;
 	}
 
+	/**
+	 * Test constructor.
+	 */
 	public KLCRH() {
 		this(1, 0.5, 2);
 	}
@@ -47,6 +61,9 @@ public class KLCRH extends Control {
 	@Override
 	public void init() {
 		this.neighbors = new HashSet<>();
+		// This is ugly. I need to allow agents to join, but this is done with
+		// messages, so the comm module has to be initialized, then join
+		// messages sent and then I can run the algorithm.
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
 				.getDirector().getCurrentTime() + 0.2, agent, EType.CONTROL));
 	}
@@ -67,6 +84,7 @@ public class KLCRH extends Control {
 	public void control() {
 		double now = agent.getDirector().getCurrentTime();
 		Director d = new Director(now);
+		// Copy targets and agents to run simulations for the lookahead steps
 		ArrayList<Agent> agents = copyAgents(d, neighbors);
 		// FIXME no sense
 		ArrayList<Target> targets = copyTargets(d, agent.getSense()
@@ -77,14 +95,13 @@ public class KLCRH extends Control {
 			double action_h = actionH();
 			action_h = best.plan_h; // FIXME remove
 
-			broadcastControl(neighbors, best, action_h);
+			broadcastControl(neighbors, best);
 
 			agent.postEvent(new Event(now, now + action_h, agent, EType.CONTROL));
 		}
 	}
 
-	protected void broadcastControl(Collection<Agent> agents, Heading best,
-			double action_h) {
+	protected void broadcastControl(Collection<Agent> agents, Heading best) {
 		Communication comm = agent.getCommunication();
 		if (comm != null) {
 			int i = 0;
@@ -121,34 +138,43 @@ public class KLCRH extends Control {
 		return copy;
 	}
 
+	// Main steps of the KLCRH algorithm
 	protected Heading bestHeading(Director d, ArrayList<Agent> agents,
 			ArrayList<Target> targets, int remaining) {
+		// Get the inmediate reward for the lookahead step
 		double ji = rewardI(agents, targets, d.getCurrentTime());
 
+		// After last lookahead, compute the reward to go estimate
 		if (remaining == 0) { // can't simulate, times depend on agent/target
 			double ja = rewardA(agents, targets, d.getCurrentTime());
 			return new Heading(null, ja + ji, 0);
 		}
 
-		double plan_h = getPlanH(agents, targets);
+		// Compute planning horizon
+		double plan_h = planH(agents, targets);
 		if (plan_h == Double.POSITIVE_INFINITY) {
 			return new Heading(null, ji, 0);
 		}
 
+		// Obtain the active targets and the respective headings
 		List<List<Target>> active_targets = activeTargets(agents, targets,
 				plan_h);
 		List<List<Double>> active_heads = activeHeadings(agents, active_targets);
-		HeadIt it = new HeadIt(active_heads);
 
+		HeadIt it = new HeadIt(active_heads);
 		Heading best = new Heading(null, Double.NEGATIVE_INFINITY, plan_h);
 
+		// Lookahead for each possible heading set
 		while (it.hasNext()) {
 			List<Integer> next = it.next();
 			ArrayList<Double> heading = new ArrayList<Double>();
+
+			// Setup a new simulation
 			Director next_d = new Director(d.getCurrentTime());
 			ArrayList<Agent> next_agents = copyAgents(next_d, agents);
 			ArrayList<Target> next_targets = copyTargets(next_d, targets);
 
+			// Set headings for each agent in the new simulation
 			for (int j = 0; j < next_agents.size(); j++) {
 				int index = next.get(j);
 				List<Double> head_list = active_heads.get(j);
@@ -156,18 +182,21 @@ public class KLCRH extends Control {
 				next_agents.get(j).setHeading(heading.get(j));
 			}
 
+			// Run the simulation
 			next_d.runFor(plan_h);
 
+			// Do next lookahead step and compare rewards
 			Heading cur = bestHeading(next_d, next_agents, next_targets,
 					remaining - 1);
 			if (cur.reward > best.reward) {
 				best = new Heading(heading, cur.reward, plan_h);
 			}
 		}
+
 		return new Heading(best.heading, best.reward + ji, plan_h);
 	}
 
-	protected double getPlanH(ArrayList<Agent> agents, ArrayList<Target> targets) {
+	protected double planH(ArrayList<Agent> agents, ArrayList<Target> targets) {
 		double h = Double.POSITIVE_INFINITY;
 		for (Agent a : agents) {
 			for (Target t : targets) {
@@ -290,7 +319,7 @@ public class KLCRH extends Control {
 	}
 
 	/**
-	 * @return the k
+	 * @return The parameter K
 	 */
 	public int getK() {
 		return K;
@@ -298,14 +327,14 @@ public class KLCRH extends Control {
 
 	/**
 	 * @param k
-	 *            the k to set
+	 *            The parameter K to set
 	 */
 	public void setK(int k) {
 		K = k;
 	}
 
 	/**
-	 * @return the delta
+	 * @return The parameter delta
 	 */
 	public double getDelta() {
 		return delta;
@@ -313,14 +342,14 @@ public class KLCRH extends Control {
 
 	/**
 	 * @param delta
-	 *            the delta to set
+	 *            The parameter delta to set
 	 */
 	public void setDelta(double delta) {
 		this.delta = delta;
 	}
 
 	/**
-	 * @return the b
+	 * @return The parameter b
 	 */
 	public int getB() {
 		return b;
@@ -328,12 +357,13 @@ public class KLCRH extends Control {
 
 	/**
 	 * @param b
-	 *            the b to set
+	 *            The parameter b to set
 	 */
 	public void setB(int b) {
 		this.b = b;
 	}
 
+	// Result of each lookahead step
 	protected class Heading {
 		public final ArrayList<Double> heading;
 		public final double reward;
@@ -342,6 +372,7 @@ public class KLCRH extends Control {
 		/**
 		 * @param heading
 		 * @param reward
+		 * @param plan_h
 		 */
 		public Heading(ArrayList<Double> heading, double reward, double plan_h) {
 			this.heading = heading;
@@ -351,6 +382,7 @@ public class KLCRH extends Control {
 
 	}
 
+	// Compare targets by travel cost from a point
 	protected class Cmp implements Comparator<Target> {
 		protected Point x;
 		protected List<Target> targets;
@@ -370,6 +402,7 @@ public class KLCRH extends Control {
 		}
 	}
 
+	// Iterator for headings
 	protected class HeadIt implements Iterator<List<Integer>> {
 		public final List<List<Double>> heads;
 		protected ArrayList<Integer> cur;

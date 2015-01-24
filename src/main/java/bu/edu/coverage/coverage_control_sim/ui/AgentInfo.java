@@ -7,17 +7,24 @@ import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * Information panel for an agent.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class AgentInfo extends ActorInfo {
-	public static final String X = "x";
-	public static final String Y = "y";
-	public static final String V = "v";
-	public static final String HEAD = "head";
+	private static final long serialVersionUID = 1L;
 
+	// Labels
+	protected static final String X = "x";
+	protected static final String Y = "y";
+	protected static final String V = "v";
+	protected static final String HEAD = "head";
+
+	// Singleton instance
 	static protected AgentInfo instance = new AgentInfo();
 
+	// Referring agent
 	protected Agent a;
 
 	protected AgentInfo() {
@@ -27,6 +34,16 @@ public class AgentInfo extends ActorInfo {
 		addInfoPair(HEAD);
 	}
 
+	/**
+	 * Obtains the info panel for the agent associated to the given tableau.
+	 * Only one panel can exist at any given time.
+	 * 
+	 * @param a
+	 *            The Agent
+	 * @param t
+	 *            The containing tableau
+	 * @return The info panel associated to the agent
+	 */
 	static public AgentInfo getAgentInfo(Agent a, Tableau t) {
 		instance.setAgent(a);
 		instance.setTableau(t);

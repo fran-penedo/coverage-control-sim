@@ -15,17 +15,27 @@ import bu.edu.coverage.coverage_control_sim.actor.Actor;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * Component holding a single actor. Delegates painting to the actor. It's
+ * responsible for positioning and event handling.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class ActorComponent extends JComponent {
+	private static final long serialVersionUID = 1L;
 
-	protected final Tableau tableau;
-	protected final Actor actor;
-	protected boolean selected;
+	protected final Tableau tableau; // Containing tableau
+	protected final Actor actor; // Associated actor
+	protected boolean selected; // Selected status
 
 	/**
+	 * Creates a component for an actor with a containing tableau. The component
+	 * is not added to the tableau here.
 	 * 
+	 * @param tableau
+	 *            The containing tableau
+	 * @param a
+	 *            The associated actor
 	 */
 	public ActorComponent(Tableau tableau, Actor a) {
 		this.tableau = tableau;
@@ -46,7 +56,7 @@ public class ActorComponent extends JComponent {
 
 	}
 
-	public void setActorBounds() {
+	protected void setActorBounds() {
 		Point p = actor.getPos();
 		Point size = actor.getSize();
 		int x = (int) p.x;
@@ -56,6 +66,12 @@ public class ActorComponent extends JComponent {
 		setBounds(x - w / 2, y - h / 2, w, h);
 	}
 
+	/**
+	 * Sets the selected. If selected, a border will be displayed.
+	 * 
+	 * @param selected
+	 *            The new selected status
+	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 		updateBorder();
@@ -116,11 +132,20 @@ public class ActorComponent extends JComponent {
 
 	}
 
+	/**
+	 * Removes the actor from the simulation and removes the component from the
+	 * tableau.
+	 */
 	public void remove() {
 		actor.destroy();
 		tableau.remove(this);
 	}
 
+	/**
+	 * Gets the actor associated with this component.
+	 * 
+	 * @return The actor
+	 */
 	public Actor getActor() {
 		return actor;
 	}

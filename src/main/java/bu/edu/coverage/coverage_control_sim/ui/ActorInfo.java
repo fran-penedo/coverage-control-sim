@@ -17,21 +17,27 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * @author fran
+ * Panel used for showing and changing information about a single actor.
+ * Extending classes are supposed to define a singleton instance.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public abstract class ActorInfo extends JPanel implements ActionListener {
-	public static final String ID = "Id";
-	public static final String SET = "Set";
+	private static final long serialVersionUID = 1L;
 
-	protected Tableau tableau;
-	protected JButton set;
-	protected JPanel info;
-	protected BoxLayout layout;
-	protected HashMap<String, JTextField> fields;
+	// Labels
+	protected static final String ID = "Id";
+	protected static final String SET = "Set";
 
+	protected Tableau tableau; // Associated tableau
+	protected JButton set; // Set button
+	protected JPanel info; // Panel holding the fields
+	protected BoxLayout layout; // Layout of the panel
+	protected HashMap<String, JTextField> fields; // Field retrievable by name
+
+	// Non public constructor for singleton
 	protected ActorInfo() {
-
 		fields = new HashMap<>();
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -56,6 +62,7 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 		this.tableau = tableau;
 	}
 
+	// Adds a pair label-textfield with the given label
 	protected void addInfoPair(String label) {
 		JPanel pair = new JPanel(new FlowLayout());
 		JLabel l = new JLabel(label);
@@ -66,8 +73,10 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 		fields.put(label, text);
 	}
 
+	// Updates the panel
 	protected abstract void update();
 
+	// Sets the changes on the actor
 	protected abstract void set();
 
 	@Override

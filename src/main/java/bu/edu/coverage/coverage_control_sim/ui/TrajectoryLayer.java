@@ -11,14 +11,27 @@ import java.util.HashMap;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
- *
- *         TODO straight line updates should be optimized
+ * Displays the trajectories of the actors in the simulation.
+ * 
+ * <p>
+ * TODO straight line updates should be optimized
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  */
 public class TrajectoryLayer extends InfoLayer {
-	protected HashMap<ActorComponent, Path2D.Double> paths;
-	protected Tableau tableau;
+	private static final long serialVersionUID = 1L;
 
+	// Path for each actor
+	protected HashMap<ActorComponent, Path2D.Double> paths;
+	protected Tableau tableau; // Containing tableau
+
+	/**
+	 * Creates a component displaying the trajectories of the actors contained
+	 * in the tableau.
+	 * 
+	 * @param tableau
+	 *            The containing tableau
+	 */
 	public TrajectoryLayer(Tableau tableau) {
 		this.tableau = tableau;
 		this.paths = new HashMap<>();
@@ -32,6 +45,7 @@ public class TrajectoryLayer extends InfoLayer {
 		}
 	}
 
+	// Gets or creates a new path for an actor
 	private Path2D.Double getPath(ActorComponent ac) {
 		if (paths.containsKey(ac)) {
 			return paths.get(ac);

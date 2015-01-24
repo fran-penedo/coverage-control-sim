@@ -36,21 +36,24 @@ import bu.edu.coverage.coverage_control_sim.util.Parser;
  *
  */
 public class CoverageApplet extends Applet implements ActionListener {
+	private static final long serialVersionUID = 1L;
 
-	public static final String LOAD = "Load";
-	public static final String SAVE = "Save";
-	public static final String START = "Start";
-	public static final String RESTART = "Restart";
-	public static final String RESET = "Reset";
-	public static final String PAUSE = "Pause";
-	public static final String RESUME = "Resume";
-	public static final String SELECT = "Select";
-	public static final String ADDAGENTS = "Add Agents";
-	public static final String ADDTARGETS = "Add Targets";
-	public static final String REMOVE = "Remove";
-	public static final String TRAJECTORY = "Trajectories";
+	// Button labels
+	protected static final String LOAD = "Load";
+	protected static final String SAVE = "Save";
+	protected static final String START = "Start";
+	protected static final String RESTART = "Restart";
+	protected static final String RESET = "Reset";
+	protected static final String PAUSE = "Pause";
+	protected static final String RESUME = "Resume";
+	protected static final String SELECT = "Select";
+	protected static final String ADDAGENTS = "Add Agents";
+	protected static final String ADDTARGETS = "Add Targets";
+	protected static final String REMOVE = "Remove";
+	protected static final String TRAJECTORY = "Trajectories";
 
-	public static final int SIZE = 500;
+	// Size of the tableau. Should be made mutable at some point.
+	protected static final int SIZE = 500;
 
 	protected Tableau t;
 	protected JCheckBox trajectory;
@@ -94,10 +97,8 @@ public class CoverageApplet extends Applet implements ActionListener {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -106,6 +107,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(800, 800));
 
+		// Get permission for accessing the file system
 		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			@Override
 			public Object run() {
@@ -114,6 +116,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 			}
 		});
 
+		// Create the tableau and add it to the center
 		Director d = new Director();
 		t = new Tableau(SIZE, SIZE, d);
 
@@ -121,6 +124,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		center.add(t);
 		add("Center", center);
 
+		// Create the top panels
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
@@ -133,6 +137,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		top.add(command);
 		add("North", top);
 
+		// Create the left panel (used for toggling information layers
 		JPanel left = new JPanel();
 
 		JPanel layer = createLayerPanel();
@@ -140,12 +145,15 @@ public class CoverageApplet extends Applet implements ActionListener {
 		left.add(layer);
 		add("West", left);
 
+		// Create the right panel (used for information panels)
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		t.setInfoPanel(right);
 
 		add("East", right);
 
+		// Add master to tableau (need everything setup so it can spawn the
+		// information panel
 		t.addMaster();
 		t.repaint();
 	}
@@ -197,6 +205,8 @@ public class CoverageApplet extends Applet implements ActionListener {
 		return panel;
 	}
 
+	// Creates a button with the given text and adds the listener to it. The
+	// action command string will be the same as the text
 	private JButton createButton(String text, Container container,
 			ActionListener listener) {
 		JButton b = new JButton(text);
@@ -207,6 +217,8 @@ public class CoverageApplet extends Applet implements ActionListener {
 		return b;
 	}
 
+	// Creates a toggle button with the given text and adds the listener to it.
+	// The action command string will be the same as the text
 	private JToggleButton createToggleButton(String text, Container container,
 			ActionListener listener) {
 		JToggleButton b = new JToggleButton(text);
@@ -217,6 +229,8 @@ public class CoverageApplet extends Applet implements ActionListener {
 		return b;
 	}
 
+	// Creates a check box with the given text and adds the listener to it. The
+	// action command string will be the same as the text. Defaults to selected
 	private JCheckBox createCheckBox(String text, Container container,
 			ActionListener listener) {
 		JCheckBox b = new JCheckBox(text);
@@ -236,6 +250,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 				try {
 					Parser parser = new Parser(new FileInputStream(
 							fc.getSelectedFile()));
+					// FIXME will fail if called twice I think
 					Director d = parser.input();
 					t.setDirector(d);
 				} catch (FileNotFoundException e1) {
@@ -253,6 +268,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 				try {
 					PrintStream st = new PrintStream(fc.getSelectedFile());
 					st.print(t.getSaved().toCode());
+					st.close();
 
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block

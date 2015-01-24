@@ -8,18 +8,26 @@ import bu.edu.coverage.coverage_control_sim.control.KLCRH;
 import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
 
 /**
- * @author fran
+ * Information panel for a master agent. Will pause the simulation when no more
+ * targets are active.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class MasterInfo extends ActorInfo {
-	public static final String K = "K";
-	public static final String DELTA = "delta";
-	public static final String B = "b";
-	public static final String J = "J";
-	public static final String TIME = "Time";
+	private static final long serialVersionUID = 1L;
 
+	// Labels
+	protected static final String K = "K";
+	protected static final String DELTA = "delta";
+	protected static final String B = "b";
+	protected static final String J = "J";
+	protected static final String TIME = "Time";
+
+	// Singleton instance
 	static protected MasterInfo instance = new MasterInfo();
 
+	// Referring master agent
 	protected MasterAgent m;
 
 	protected MasterInfo() {
@@ -30,6 +38,16 @@ public class MasterInfo extends ActorInfo {
 		addInfoPair(TIME);
 	}
 
+	/**
+	 * Obtains the info panel for the master agent associated to the given
+	 * tableau. Only one panel can exist at any given time.
+	 * 
+	 * @param a
+	 *            The master agent
+	 * @param t
+	 *            The containing tableau
+	 * @return The info panel associated to the master agent
+	 */
 	static public MasterInfo getMasterInfo(MasterAgent a, Tableau t) {
 		instance.setMaster(a);
 		instance.setTableau(t);
@@ -51,6 +69,9 @@ public class MasterInfo extends ActorInfo {
 		MasterSense s = (MasterSense) m.getSense();
 		fields.get(J).setText("" + s.getReward());
 		fields.get(TIME).setText("" + tableau.getDirector().getCurrentTime());
+
+		// Pauses the simulation if no more targets are active.
+		// NOTE: Not sure how I feel about this
 		if (s.getTargets() != null && s.getTargets().isEmpty()) {
 			tableau.pause();
 		}

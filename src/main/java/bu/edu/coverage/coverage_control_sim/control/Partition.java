@@ -14,6 +14,34 @@ import bu.edu.coverage.coverage_control_sim.actor.Target;
 
 /**
  * Creates a partition of the targets and associates each group to an agent.
+ * Instead of strict partitioning (closest to target), we follow a fuzzy scheme.
+ * A neighbor set from target i of size b at time t, \( \beta ^b (i, t) \), is
+ * defined as the closest agents to the target (using the standard euclidean
+ * distance). We then define a relative distance for all target j:
+ * 
+ * \[
+ * \delta_{ij}(t) = \left\{\begin{matrix}
+ * \frac{c_{ij}(t)}{\sum_{k \in \beta^b(i, t)}{c_{ik}(t)}} & \mathrm{if} \ j \in
+ * \beta^b(i, t)\\
+ * 1 & \mathrm{otherwise}
+ * \end{matrix}\right.
+ * \]
+ * 
+ * Finally, we define a relative proximity function with parameter \(\Delta \in
+ * [0, \frac{1}{2}) \):
+ * 
+ * \[
+ * p(\delta_{ij}(t)) = \left\{\begin{matrix}
+ * 1 & \mathrm{if} \ \delta \leq \Delta \\
+ * \frac{1-\Delta-\delta}{1 - 2 \Delta} & \mathrm{if} \ \Delta < \delta \leq 1 -
+ * \Delta \\
+ * 0 & \mathrm{if} \ \delta > 1 - \Delta \
+ * \end{matrix}\right.
+ * \]
+ * 
+ * Partitions are done following a least proximity rule.
+ * <p>
+ * FIXME does this make sense? There's no collaboration, I think.
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *

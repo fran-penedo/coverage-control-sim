@@ -6,7 +6,12 @@ package bu.edu.coverage.coverage_control_sim.control;
 /**
  * A discount function of the form:
  * 
- * FIXME
+ * \[
+ * \phi (t) = \left\{\begin{matrix}
+ * 1 - \frac{\alpha}{D}t & \mathrm{if} \ t \leq D \\
+ * (1 - \alpha)e^{-\beta (t - D)} & \mathrm{if} \ t > D
+ * \end{matrix}\right.
+ * \]
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *

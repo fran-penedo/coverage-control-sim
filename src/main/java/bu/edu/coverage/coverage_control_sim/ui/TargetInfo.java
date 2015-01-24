@@ -8,20 +8,27 @@ import bu.edu.coverage.coverage_control_sim.control.DeadlineDiscount;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
- * @author fran
+ * Information panel for a target.
+ * 
+ * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public class TargetInfo extends ActorInfo {
-	public static final String X = "x";
-	public static final String Y = "y";
-	public static final String IREWARD = "Lambda";
-	public static final String CREWARD = "Reward";
-	public static final String ALPHA = "Alpha";
-	public static final String BETA = "Beta";
-	public static final String D = "D";
+	private static final long serialVersionUID = 1L;
 
+	// Labels
+	protected static final String X = "x";
+	protected static final String Y = "y";
+	protected static final String IREWARD = "Lambda";
+	protected static final String CREWARD = "Reward";
+	protected static final String ALPHA = "Alpha";
+	protected static final String BETA = "Beta";
+	protected static final String D = "D";
+
+	// Singleton instance
 	static protected TargetInfo instance = new TargetInfo();
 
+	// Referring target
 	protected Target t;
 
 	protected TargetInfo() {
@@ -34,6 +41,16 @@ public class TargetInfo extends ActorInfo {
 		addInfoPair(D);
 	}
 
+	/**
+	 * Obtains the info panel for the target associated to the given tableau.
+	 * Only one panel can exist at any given time.
+	 * 
+	 * @param a
+	 *            The Target
+	 * @param t
+	 *            The containing tableau
+	 * @return The info panel associated to the target
+	 */
 	static public TargetInfo getTargetInfo(Target a, Tableau t) {
 		instance.setTarget(a);
 		instance.setTableau(t);
