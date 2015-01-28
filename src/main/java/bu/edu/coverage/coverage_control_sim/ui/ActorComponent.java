@@ -24,6 +24,8 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 public class ActorComponent extends JComponent {
 	private static final long serialVersionUID = 1L;
 
+	protected static final int MIN_SIZE = 20;
+
 	protected final Tableau tableau; // Containing tableau
 	protected final Actor actor; // Associated actor
 	protected boolean selected; // Selected status
@@ -61,8 +63,8 @@ public class ActorComponent extends JComponent {
 		Point size = actor.getSize();
 		int x = (int) p.x;
 		int y = (int) p.y;
-		int w = (int) size.x;
-		int h = (int) size.y;
+		int w = drawSize(size.x);
+		int h = drawSize(size.y);
 		setBounds(x - w / 2, y - h / 2, w, h);
 	}
 
@@ -148,5 +150,16 @@ public class ActorComponent extends JComponent {
 	 */
 	public Actor getActor() {
 		return actor;
+	}
+
+	/**
+	 * Returns the minimum allowed size if the intended size is too small.
+	 * 
+	 * @param size
+	 *            The intended size
+	 * @return The maximum between the intended size and the minimum allowed
+	 */
+	public static int drawSize(double size) {
+		return Math.max((int) size, MIN_SIZE);
 	}
 }

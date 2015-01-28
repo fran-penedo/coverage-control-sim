@@ -19,6 +19,7 @@ import bu.edu.coverage.coverage_control_sim.comm.Message;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
+import bu.edu.coverage.coverage_control_sim.util.Debug;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -63,7 +64,7 @@ public class KLCRH extends Control {
 		this.neighbors = new HashSet<>();
 		// This is ugly. I need to allow agents to join, but this is done with
 		// messages, so the comm module has to be initialized, then join
-		// messages sent and then I can run the algorithm.
+		// messages have to be sent and then I can run the algorithm.
 		agent.postEvent(new Event(agent.getDirector().getCurrentTime(), agent
 				.getDirector().getCurrentTime() + 0.2, agent, EType.CONTROL));
 	}
@@ -164,6 +165,8 @@ public class KLCRH extends Control {
 		HeadIt it = new HeadIt(active_heads);
 		Heading best = new Heading(null, Double.NEGATIVE_INFINITY, plan_h);
 
+		Debug.debug("Remaining " + remaining + ". Active "
+				+ active_targets.get(0));
 		// Lookahead for each possible heading set
 		while (it.hasNext()) {
 			List<Integer> next = it.next();

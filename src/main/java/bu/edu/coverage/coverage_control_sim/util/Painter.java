@@ -29,7 +29,7 @@ public class Painter {
 	/**
 	 * Medium stroke.
 	 */
-	public static final Stroke mediumStroke = new BasicStroke(3.0f,
+	public static final Stroke mediumStroke = new BasicStroke(2.0f,
 			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	/**
 	 * Size of the heading indicator.
@@ -47,7 +47,7 @@ public class Painter {
 	 * @param color
 	 *            The color of the star
 	 */
-	public static void drawStar(Graphics2D g, double size, Color color) {
+	public static void drawStar(Graphics2D g, int size, Color color) {
 		Stroke pstroke = g.getStroke();
 		Color pcolor = g.getColor();
 		g.setStroke(mediumStroke);
@@ -94,7 +94,7 @@ public class Painter {
 	 * @param color
 	 *            The color of the star
 	 */
-	public static void drawTarget(Graphics2D g, double size, int id, Color color) {
+	public static void drawTarget(Graphics2D g, int size, int id, Color color) {
 		Color pcolor = g.getColor();
 		drawStar(g, size, color);
 		g.setColor(Color.black);

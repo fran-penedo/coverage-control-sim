@@ -11,6 +11,7 @@ import bu.edu.coverage.coverage_control_sim.control.Discount;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
+import bu.edu.coverage.coverage_control_sim.ui.ActorComponent;
 import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 import bu.edu.coverage.coverage_control_sim.ui.TargetInfo;
@@ -209,7 +210,8 @@ public class Target extends MovingActor {
 		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
 				INACTIVE_COLOR, getReward(last_update) / ireward)
 				: INACTIVE_COLOR;
-		Painter.drawTarget((Graphics2D) g, size.x, id, color);
+		Painter.drawTarget((Graphics2D) g, ActorComponent.drawSize(size.x), id,
+				color);
 	}
 
 	/**

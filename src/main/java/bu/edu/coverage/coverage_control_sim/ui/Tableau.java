@@ -24,10 +24,10 @@ import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.actor.MasterAgent;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 import bu.edu.coverage.coverage_control_sim.comm.BasicComm;
+import bu.edu.coverage.coverage_control_sim.control.ControlClient;
 import bu.edu.coverage.coverage_control_sim.control.DeadlineDiscount;
 import bu.edu.coverage.coverage_control_sim.control.Discount;
 import bu.edu.coverage.coverage_control_sim.control.KLCRH;
-import bu.edu.coverage.coverage_control_sim.control.ControlClient;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.sense.BasicSense;
 import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
@@ -158,7 +158,7 @@ public class Tableau extends JPanel implements ActionListener {
 	}
 
 	public void addTarget(Point p) {
-		double size = 40;
+		double size = 5;
 		double v = 0;
 		double heading = 0;
 		Discount discount = new DeadlineDiscount(1, 1, 1000);
