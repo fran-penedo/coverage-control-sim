@@ -12,9 +12,11 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
@@ -22,6 +24,7 @@ import javax.swing.event.MouseInputAdapter;
 import bu.edu.coverage.coverage_control_sim.actor.Actor;
 import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.actor.MasterAgent;
+import bu.edu.coverage.coverage_control_sim.actor.Obstacle;
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 import bu.edu.coverage.coverage_control_sim.comm.BasicComm;
 import bu.edu.coverage.coverage_control_sim.control.ControlClient;
@@ -37,8 +40,14 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  * @author fran
  *
  */
-public class Tableau extends JPanel implements ActionListener {
-	public static final String TRAJECTORIES = "Trajectories";
+public class Tableau extends JLayeredPane implements ActionListener {
+	protected static final String TRAJECTORIES = "Trajectories";
+	protected static final Integer INFO_LAYER = new Integer(0);
+	protected static final Integer OBSTACLE_LAYER = new Integer(1);
+	protected static final Integer TARGET_LAYER = new Integer(2);
+	protected static final Integer AGENT_LAYER = new Integer(3);
+	// This one should be the highest
+	protected static final Integer GLASS_LAYER = new Integer(10);
 
 	public final int width;
 	public final int height;
@@ -49,7 +58,8 @@ public class Tableau extends JPanel implements ActionListener {
 	protected Mode mode;
 
 	protected GlassLayer glass;
-	protected HashMap<String, GlassLayer> info_layers;
+	protected DrawPolygonLayer draw_poly;
+	protected HashMap<String, InfoLayer> info_layers;
 	protected ArrayList<ActorComponent> actors;
 	protected ActorComponent selected;
 	protected JPanel info_panel;
@@ -68,19 +78,23 @@ public class Tableau extends JPanel implements ActionListener {
 		this.actors = new ArrayList<>();
 
 		this.info_layers = new HashMap<>();
-		GlassLayer trajectory = new GlassLayer(new TrajectoryLayer(this), false);
+		InfoLayer trajectory = new TrajectoryLayer(this);
 		this.info_layers.put(TRAJECTORIES, trajectory);
 
-		for (GlassLayer layer : info_layers.values()) {
-			add(layer);
-			layer.setPreferredSize(new Dimension(width, height));
-			layer.setBounds(0, 0, width, height);
+		for (Map.Entry<String, InfoLayer> entry : info_layers.entrySet()) {
+
+			entry.getValue().setPreferredSize(new Dimension(width, height));
+			entry.getValue().setBounds(0, 0, width, height);
+			setInfoLayerActive(entry.getKey(), true);
 		}
 
-		this.glass = new GlassLayer(null, false);
+		this.glass = new GlassLayer();
 		glass.setPreferredSize(new Dimension(width, height));
 		glass.setBounds(0, 0, width, height);
 		glass.addMouseListener(new GlassMouseAdapter());
+		this.draw_poly = new DrawPolygonLayer();
+		draw_poly.setPreferredSize(new Dimension(width, height));
+		draw_poly.setBounds(0, 0, width, height);
 
 		addMouseListener(new TableauMouseAdapter());
 		setPreferredSize(new Dimension(width, height));
@@ -140,20 +154,17 @@ public class Tableau extends JPanel implements ActionListener {
 
 	public void setMode(Mode mode) {
 		this.mode = mode;
-		if (mode == Mode.SELECT) {
-			setGlassPaneActive(false);
-		} else {
-			setGlassPaneActive(true);
-		}
+		setGlassLayerActive(glass, !(mode == Mode.SELECT));
+		setGlassLayerActive(draw_poly, mode == Mode.ADD_OBST);
 	}
 
-	protected void setGlassPaneActive(boolean active) {
+	protected void setGlassLayerActive(GlassLayer layer, boolean active) {
 		if (active) {
-			if (!isAncestorOf(glass)) {
-				add(glass);
+			if (!isAncestorOf(layer)) {
+				add(layer, GLASS_LAYER);
 			}
 		} else {
-			remove(glass);
+			remove(layer);
 		}
 	}
 
@@ -165,7 +176,7 @@ public class Tableau extends JPanel implements ActionListener {
 		double ireward = 100;
 		Target t = new Target(d, p, size, v, heading, discount, ireward, true);
 		ActorComponent ac = new ActorComponent(this, t);
-		add(ac);
+		add(ac, TARGET_LAYER);
 	}
 
 	public void addAgent(Point p) {
@@ -177,7 +188,7 @@ public class Tableau extends JPanel implements ActionListener {
 		a.setSense(new BasicSense(1));
 		a.setControl(new ControlClient());
 		ActorComponent ac = new ActorComponent(this, a);
-		add(ac);
+		add(ac, AGENT_LAYER);
 	}
 
 	public void addMaster() {
@@ -189,12 +200,18 @@ public class Tableau extends JPanel implements ActionListener {
 		master.setControl(new KLCRH(K, delta, b));
 		master.setSense(new MasterSense());
 		ActorComponent ac = new ActorComponent(this, master);
-		add(ac);
+		add(ac, new Integer(0));
 		info_panel.add(master.getInfoPanel(this));
 	}
 
-	public void add(ActorComponent ac) {
-		add((JComponent) ac);
+	public void addObstacle(List<Point> points) {
+		Obstacle obs = new Obstacle(d, points);
+		ActorComponent ac = new ActorComponent(this, obs);
+		add(ac, OBSTACLE_LAYER);
+	}
+
+	public void add(ActorComponent ac, Integer layer) {
+		add((JComponent) ac, layer);
 		actors.add(ac);
 	}
 
@@ -205,10 +222,10 @@ public class Tableau extends JPanel implements ActionListener {
 
 	public void setInfoLayerActive(String layer_key, boolean active) {
 		if (info_layers.containsKey(layer_key)) {
-			GlassLayer layer = info_layers.get(layer_key);
+			InfoLayer layer = info_layers.get(layer_key);
 			if (active) {
 				if (!isAncestorOf(layer)) {
-					add(layer);
+					add(layer, INFO_LAYER);
 				}
 			} else {
 				remove(layer);
@@ -223,14 +240,20 @@ public class Tableau extends JPanel implements ActionListener {
 			unselect();
 			ac.setSelected(true);
 			selected = ac;
-			info_panel.add(ac.getActor().getInfoPanel(this));
+			ActorInfo ip = ac.getActor().getInfoPanel(this);
+			if (ip != null) {
+				info_panel.add(ac.getActor().getInfoPanel(this));
+			}
 			repaint();
 		}
 	}
 
 	public void unselect() {
 		if (selected != null) {
-			info_panel.remove(selected.getActor().getInfoPanel(this));
+			ActorInfo ip = selected.getActor().getInfoPanel(this);
+			if (ip != null) {
+				info_panel.remove(ip);
+			}
 			selected.setSelected(false);
 			selected = null;
 			repaint();
@@ -258,12 +281,22 @@ public class Tableau extends JPanel implements ActionListener {
 			addTarget(p);
 			break;
 		}
+		case ADD_OBST: {
+			draw_poly.addPoint(p);
+			break;
+		}
 		default:
 			break;
 		}
 
 		repaint();
 
+	}
+
+	public void glassDoubleClick(MouseEvent e) {
+		glassLeftClick(e);
+		addObstacle(draw_poly.getPoints());
+		draw_poly.clear();
 	}
 
 	public List<ActorComponent> getActors() {
@@ -285,7 +318,7 @@ public class Tableau extends JPanel implements ActionListener {
 	}
 
 	protected void updateInfo() {
-		for (GlassLayer layer : info_layers.values()) {
+		for (InfoLayer layer : info_layers.values()) {
 			layer.update();
 		}
 		for (Component c : info_panel.getComponents()) {
@@ -298,9 +331,15 @@ public class Tableau extends JPanel implements ActionListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				glassLeftClick(e);
+				if (e.getClickCount() == 1) {
+					glassLeftClick(e);
+				} else {
+					glassDoubleClick(e);
+				}
 			}
+
 		}
+
 	}
 
 	private class TableauMouseAdapter extends MouseInputAdapter {

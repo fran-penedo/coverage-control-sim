@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -30,6 +31,7 @@ import javax.swing.JToggleButton;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.util.ParseException;
 import bu.edu.coverage.coverage_control_sim.util.Parser;
+import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
  * @author fran
@@ -49,6 +51,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 	protected static final String SELECT = "Select";
 	protected static final String ADDAGENTS = "Add Agents";
 	protected static final String ADDTARGETS = "Add Targets";
+	protected static final String ADDOBSTACLES = "Add Obstacles";
 	protected static final String REMOVE = "Remove";
 	protected static final String TRAJECTORY = "Trajectories";
 
@@ -155,7 +158,16 @@ public class CoverageApplet extends Applet implements ActionListener {
 		// Add master to tableau (need everything setup so it can spawn the
 		// information panel
 		t.addMaster();
+		DEBUGOBS(t);
 		t.repaint();
+	}
+
+	private void DEBUGOBS(Tableau t) {
+		ArrayList<Point> ps = new ArrayList<>();
+		ps.add(new Point(100, 100));
+		ps.add(new Point(200, 100));
+		ps.add(new Point(100, 200));
+		t.addObstacle(ps);
 	}
 
 	private JPanel createModePanel() {
@@ -167,6 +179,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		group.add(select);
 		group.add(createToggleButton(ADDAGENTS, mode, this));
 		group.add(createToggleButton(ADDTARGETS, mode, this));
+		group.add(createToggleButton(ADDOBSTACLES, mode, this));
 
 		select.setSelected(true);
 		return mode;
@@ -307,6 +320,10 @@ public class CoverageApplet extends Applet implements ActionListener {
 		}
 		case ADDTARGETS: {
 			t.setMode(Mode.ADD_TARGET);
+			break;
+		}
+		case ADDOBSTACLES: {
+			t.setMode(Mode.ADD_OBST);
 			break;
 		}
 		case REMOVE: {

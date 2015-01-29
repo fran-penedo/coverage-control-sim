@@ -7,6 +7,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.util.List;
 
 /**
  * A class with painting methods
@@ -140,6 +141,41 @@ public class Painter {
 				- DIRECTION_POINTER_SIZE / 2, y
 				+ (int) (Math.sin(heading) * h / 2) - DIRECTION_POINTER_SIZE
 				/ 2, DIRECTION_POINTER_SIZE, DIRECTION_POINTER_SIZE);
+
+		g.setColor(pcolor);
+	}
+
+	/**
+	 * Draws a polygon with surrounding rectangle centered at p and of the given
+	 * size from a list of vertices.
+	 * 
+	 * @param g
+	 * @param p
+	 *            The center of the surrounding rectangle
+	 * @param size
+	 *            The size of the surrounding rectangle
+	 * @param points
+	 *            The list of vertices
+	 * @param color
+	 *            The color of the interior
+	 */
+	public static void drawPolygon(Graphics2D g, Point p, Point size,
+			List<Point> points, Color color) {
+		Color pcolor = g.getColor();
+
+		double minx = p.x - size.x / 2;
+		double miny = p.y - size.y / 2;
+
+		int[] xs = new int[points.size()];
+		int[] ys = new int[points.size()];
+
+		for (int i = 0; i < points.size(); i++) {
+			xs[i] = (int) (points.get(i).x - minx);
+			ys[i] = (int) (points.get(i).y - miny);
+		}
+
+		g.setColor(color);
+		g.fillPolygon(xs, ys, points.size());
 
 		g.setColor(pcolor);
 	}
