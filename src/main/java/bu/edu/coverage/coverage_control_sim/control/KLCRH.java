@@ -20,6 +20,7 @@ import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 import bu.edu.coverage.coverage_control_sim.util.Debug;
+import bu.edu.coverage.coverage_control_sim.util.Linear;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -93,8 +94,8 @@ public class KLCRH extends Control {
 
 		if (agents.size() > 0 && targets.size() > 0) {
 			Heading best = bestHeading(d, agents, targets, K);
-			double action_h = actionH();
-			action_h = best.plan_h; // FIXME remove
+			double action_h = actionH(agents, targets, best);
+			// action_h = best.plan_h; // FIXME remove
 
 			broadcastControl(neighbors, best);
 
@@ -115,9 +116,29 @@ public class KLCRH extends Control {
 
 	}
 
-	// FIXME todo
-	protected double actionH() {
-		return 0;
+	protected double actionH(List<Agent> agents, List<Target> targets,
+			Heading head) {
+		double mtime = Double.POSITIVE_INFINITY;
+
+		for (int j = 0; j < targets.size(); j++) {
+			Target y1 = targets.get(j);
+			for (int k = j + 1; k < targets.size(); k++) {
+				Target y2 = targets.get(k);
+				for (int i = 0; i < agents.size(); i++) {
+					Agent a = agents.get(i);
+					Point ag_dir = Point.fromPolar(a.getV(),
+							head.heading.get(i));
+					Point tar_mid = y2.getPos().add(y1.getPos()).scale(1 / 2);
+					Point tar_med_dir = y2.getPos().diff(y1.getPos()).orth();
+					double t = Linear.solve1(ag_dir, tar_med_dir, a.getPos()
+							.diff(tar_mid));
+					if (t > 0 && t < mtime) {
+						mtime = t;
+					}
+				}
+			}
+		}
+		return Math.min(mtime, head.plan_h);
 	}
 
 	protected ArrayList<Agent> copyAgents(Director d, Collection<Agent> agents) {

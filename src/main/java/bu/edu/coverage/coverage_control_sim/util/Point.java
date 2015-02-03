@@ -36,6 +36,19 @@ public final class Point {
 	}
 
 	/**
+	 * Creates a point from polar coordinates.
+	 * 
+	 * @param r
+	 *            The radius
+	 * @param theta
+	 *            The angle in radians
+	 * @return A new point
+	 */
+	public static Point fromPolar(double r, double theta) {
+		return new Point(r * Math.cos(theta), r * Math.sin(theta));
+	}
+
+	/**
 	 * Computes the squared euclidean distance between this point and b.
 	 * 
 	 * @param b
@@ -74,6 +87,16 @@ public final class Point {
 	 */
 	public Point unitary() {
 		return scale(1 / dist(ZERO));
+	}
+
+	/**
+	 * Computes a unitary orthogonal vector of this.
+	 * 
+	 * @return A orthogonal vector from this
+	 */
+	public Point orth() {
+		Point p = new Point(-y, x);
+		return p.unitary();
 	}
 
 	/**

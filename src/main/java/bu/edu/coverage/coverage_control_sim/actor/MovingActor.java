@@ -55,7 +55,7 @@ public abstract class MovingActor extends Actor {
 
 	// Gets the velocity vector
 	protected Point getVelocity() {
-		return new Point(v * Math.cos(heading), v * Math.sin(heading));
+		return Point.fromPolar(v, heading);
 	}
 
 	@Override
