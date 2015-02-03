@@ -146,12 +146,10 @@ public class Painter {
 	}
 
 	/**
-	 * Draws a polygon with surrounding rectangle centered at p and of the given
-	 * size from a list of vertices.
+	 * Draws a polygon with surrounding rectangle of the given
+	 * size from a list of vertices centered on (0,0).
 	 * 
 	 * @param g
-	 * @param p
-	 *            The center of the surrounding rectangle
 	 * @param size
 	 *            The size of the surrounding rectangle
 	 * @param points
@@ -159,19 +157,19 @@ public class Painter {
 	 * @param color
 	 *            The color of the interior
 	 */
-	public static void drawPolygon(Graphics2D g, Point p, Point size,
+	public static void drawPolygon(Graphics2D g, Point size,
 			List<Point> points, Color color) {
 		Color pcolor = g.getColor();
 
-		double minx = p.x - size.x / 2;
-		double miny = p.y - size.y / 2;
+		double minx = size.x / 2;
+		double miny = size.y / 2;
 
 		int[] xs = new int[points.size()];
 		int[] ys = new int[points.size()];
 
 		for (int i = 0; i < points.size(); i++) {
-			xs[i] = (int) (points.get(i).x - minx);
-			ys[i] = (int) (points.get(i).y - miny);
+			xs[i] = (int) (points.get(i).x + minx);
+			ys[i] = (int) (points.get(i).y + miny);
 		}
 
 		g.setColor(color);

@@ -33,11 +33,20 @@ public class Obstacle extends Actor {
 	public Obstacle(Director director, List<Point> points) {
 		super(director, null, null);
 
-		this.points = new ArrayList<>(points);
-		setBounds();
+		setBounds(points);
+		this.points = moveToOrigin(points);
+
 	}
 
-	protected void setBounds() {
+	protected ArrayList<Point> moveToOrigin(List<Point> points) {
+		ArrayList<Point> npoints = new ArrayList<>();
+		for (Point p : points) {
+			npoints.add(p.diff(getPos()));
+		}
+		return npoints;
+	}
+
+	protected void setBounds(List<Point> points) {
 		double minx = Double.POSITIVE_INFINITY;
 		double miny = Double.POSITIVE_INFINITY;
 		double maxx = Double.NEGATIVE_INFINITY;
@@ -100,7 +109,7 @@ public class Obstacle extends Actor {
 	@Override
 	public void paint(Graphics g) {
 		Color color = Color.green;
-		Painter.drawPolygon((Graphics2D) g, p, size, points, color);
+		Painter.drawPolygon((Graphics2D) g, size, points, color);
 
 	}
 
