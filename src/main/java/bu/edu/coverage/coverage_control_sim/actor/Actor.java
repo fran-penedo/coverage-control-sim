@@ -100,13 +100,6 @@ public abstract class Actor {
 	public abstract void init();
 
 	/**
-	 * Paints the actor
-	 * 
-	 * @param g
-	 */
-	public abstract void paint(Graphics g);
-
-	/**
 	 * Gets the position of the actor for the current time
 	 * 
 	 * @return The position
@@ -200,6 +193,8 @@ public abstract class Actor {
 	 */
 	public abstract Actor deepCopy(Director d);
 
+	/***** Paint methods **************/
+
 	/**
 	 * Generates a panel with information of this actor.
 	 * 
@@ -208,5 +203,20 @@ public abstract class Actor {
 	 * @return An info panel linked to this actor
 	 */
 	public abstract ActorInfo getInfoPanel(Tableau tableau);
+
+	/**
+	 * Paints the actor
+	 * 
+	 * @param g
+	 */
+	public abstract void paint(Graphics g);
+
+	/**
+	 * 
+	 * @return The layer the actor wants to be painted in
+	 */
+	public Integer getLayer() {
+		return Tableau.TOP_LAYER;
+	}
 
 }

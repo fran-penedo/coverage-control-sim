@@ -79,6 +79,14 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 	// Sets the changes on the actor
 	protected abstract void set();
 
+	/**
+	 * 
+	 * @return If the panel should always be visible
+	 */
+	public boolean alwaysVisible() {
+		return false;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == SET) {

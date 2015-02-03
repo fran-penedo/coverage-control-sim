@@ -89,4 +89,9 @@ public class MasterInfo extends ActorInfo {
 		c.setDelta(delta);
 		c.setB(b);
 	}
+
+	@Override
+	public boolean alwaysVisible() {
+		return true;
+	}
 }

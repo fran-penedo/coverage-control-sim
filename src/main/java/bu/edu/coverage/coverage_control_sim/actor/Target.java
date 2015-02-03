@@ -205,15 +205,6 @@ public class Target extends MovingActor {
 		this.discount = discount;
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
-				INACTIVE_COLOR, getReward(last_update) / ireward)
-				: INACTIVE_COLOR;
-		Painter.drawTarget((Graphics2D) g, ActorComponent.drawSize(size.x), id,
-				color);
-	}
-
 	/**
 	 * Payload for visited events
 	 * 
@@ -262,6 +253,20 @@ public class Target extends MovingActor {
 	@Override
 	public ActorInfo getInfoPanel(Tableau tableau) {
 		return TargetInfo.getTargetInfo(this, tableau);
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		Color color = isActive() ? Painter.getMixedColor(ACTIVE_COLOR,
+				INACTIVE_COLOR, getReward(last_update) / ireward)
+				: INACTIVE_COLOR;
+		Painter.drawTarget((Graphics2D) g, ActorComponent.drawSize(size.x), id,
+				color);
+	}
+
+	@Override
+	public Integer getLayer() {
+		return Tableau.TARGET_LAYER;
 	}
 
 }

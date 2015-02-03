@@ -158,7 +158,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		// Add master to tableau (need everything setup so it can spawn the
 		// information panel
 		t.addMaster();
-		DEBUGOBS(t);
+		// DEBUGOBS(t);
 		t.repaint();
 	}
 

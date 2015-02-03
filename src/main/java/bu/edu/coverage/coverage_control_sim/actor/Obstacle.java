@@ -69,19 +69,6 @@ public class Obstacle extends Actor {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * bu.edu.coverage.coverage_control_sim.actor.Actor#paint(java.awt.Graphics)
-	 */
-	@Override
-	public void paint(Graphics g) {
-		Color color = Color.green;
-		Painter.drawPolygon((Graphics2D) g, p, size, points, color);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * bu.edu.coverage.coverage_control_sim.actor.Actor#deepCopy(bu.edu.coverage
 	 * .coverage_control_sim.event.Director)
 	 */
@@ -102,6 +89,24 @@ public class Obstacle extends Actor {
 	public ActorInfo getInfoPanel(Tableau tableau) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * bu.edu.coverage.coverage_control_sim.actor.Actor#paint(java.awt.Graphics)
+	 */
+	@Override
+	public void paint(Graphics g) {
+		Color color = Color.green;
+		Painter.drawPolygon((Graphics2D) g, p, size, points, color);
+
+	}
+
+	@Override
+	public Integer getLayer() {
+		return Tableau.OBSTACLE_LAYER;
 	}
 
 }
