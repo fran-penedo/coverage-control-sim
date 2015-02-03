@@ -69,7 +69,9 @@ void master(Director d) :
   double heading;
   int k;
   double delta;
-  int b;}{  < MASTER >
+  int b;
+  double gamma;
+  boolean actionh;}{  < MASTER >
   p=point()
   size=point()
   v=value()
@@ -77,10 +79,12 @@ void master(Director d) :
   k=integer()
   delta=value()
   b=integer()
+  gamma=value()
+  actionh=bool()
   "\n"
   {    MasterAgent master = new MasterAgent(d);
     master.setCommunication(new BasicComm());
-	master.setControl(new KLCRH(k, delta, b));
+	master.setControl(new KLCRH(k, delta, b, gamma, actionh));
 	master.setSense(new MasterSense());  }
 }
 
@@ -101,7 +105,7 @@ void agent(Director d) :
   {
     Agent agent = new Agent(d, p, size, v, heading);
     agent.setCommunication(new BasicComm());
-	agent.setControl(new KLCRHClient());
+	agent.setControl(new ControlClient());
 	agent.setSense(new BasicSense(1));
   }
 }
@@ -169,5 +173,12 @@ int integer() :
 }
 {  t=< INT_LITERAL >
   {    return Integer.parseInt(t.image);
+  }
+}
+
+boolean bool() :{  Token t;
+}
+{  t=< INT_LITERAL >
+  {    return Integer.parseInt(t.image) != 0;
   }
 }

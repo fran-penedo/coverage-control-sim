@@ -21,6 +21,8 @@ public class MasterInfo extends ActorInfo {
 	protected static final String K = "K";
 	protected static final String DELTA = "delta";
 	protected static final String B = "b";
+	protected static final String GAMMA = "gamma";
+	protected static final String ACTIONH = "Enable Action H";
 	protected static final String J = "J";
 	protected static final String TIME = "Time";
 
@@ -34,6 +36,8 @@ public class MasterInfo extends ActorInfo {
 		addInfoPair(K);
 		addInfoPair(DELTA);
 		addInfoPair(B);
+		addInfoPair(GAMMA);
+		addInfoPair(ACTIONH);
 		addInfoPair(J);
 		addInfoPair(TIME);
 	}
@@ -66,6 +70,8 @@ public class MasterInfo extends ActorInfo {
 		fields.get(K).setText("" + c.getK());
 		fields.get(DELTA).setText("" + c.getDelta());
 		fields.get(B).setText("" + c.getB());
+		fields.get(GAMMA).setText("" + c.getGamma());
+		fields.get(ACTIONH).setText("" + c.getActionHEnabled());
 		MasterSense s = (MasterSense) m.getSense();
 		fields.get(J).setText("" + s.getReward());
 		fields.get(TIME).setText("" + tableau.getDirector().getCurrentTime());
@@ -83,11 +89,15 @@ public class MasterInfo extends ActorInfo {
 		int k = Integer.parseInt(fields.get(K).getText());
 		double delta = Double.parseDouble(fields.get(DELTA).getText());
 		int b = Integer.parseInt(fields.get(B).getText());
+		double gamma = Double.parseDouble(fields.get(GAMMA).getText());
+		boolean actionh = Boolean.parseBoolean(fields.get(ACTIONH).getText());
 
 		KLCRH c = (KLCRH) m.getControl();
 		c.setK(k);
 		c.setDelta(delta);
 		c.setB(b);
+		c.setGamma(gamma);
+		c.setActionHEnabled(actionh);
 	}
 
 	@Override
