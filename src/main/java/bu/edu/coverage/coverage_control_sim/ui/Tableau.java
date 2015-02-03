@@ -104,7 +104,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		this.init = true;
 	}
 
-	public void setDirector(Director d) {
+	public void setDirector(Director d) { // FIXME restart on load
 		if (this.d != null) {
 			for (ActorComponent ac : actors) {
 				remove((JComponent) ac);
@@ -134,7 +134,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		}
 	}
 
-	public void restart() {
+	public void restart() { // FIXME not started yet
 		started = false;
 		timer.stop();
 		setDirector(saved);
@@ -262,7 +262,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 
 	public void removeSelectedActor() {
 		if (selected != null) {
-			info_panel.remove(selected.getActor().getInfoPanel(this));
+			info_panel.remove(selected.getActor().getInfoPanel(this)); // FIXME
 			selected.remove();
 			selected = null;
 			repaint();
