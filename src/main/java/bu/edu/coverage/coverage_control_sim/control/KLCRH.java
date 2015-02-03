@@ -139,10 +139,10 @@ public class KLCRH extends Control {
 					Agent a = agents.get(i);
 					Point ag_dir = Point.fromPolar(a.getV(),
 							head.heading.get(i));
-					Point tar_mid = y2.getPos().add(y1.getPos()).scale(1 / 2);
+					Point tar_mid = y2.getPos().add(y1.getPos()).scale(0.5);
 					Point tar_med_dir = y2.getPos().diff(y1.getPos()).orth();
-					double t = Linear.solve1(ag_dir, tar_med_dir, a.getPos()
-							.diff(tar_mid));
+					double t = Linear.solve1(ag_dir, tar_med_dir,
+							tar_mid.diff(a.getPos()));
 					if (t > 0 && t < mtime) {
 						mtime = t;
 					}

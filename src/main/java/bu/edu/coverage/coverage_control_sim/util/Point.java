@@ -86,7 +86,7 @@ public final class Point {
 	 * @return The unitary vector from this
 	 */
 	public Point unitary() {
-		return scale(1 / dist(ZERO));
+		return scale(1.0 / dist(ZERO));
 	}
 
 	/**
@@ -116,7 +116,7 @@ public final class Point {
 	 * @return This minus b
 	 */
 	public Point diff(Point b) {
-		return new Point(x - b.x, y - b.x);
+		return new Point(x - b.x, y - b.y);
 	}
 
 	/**
