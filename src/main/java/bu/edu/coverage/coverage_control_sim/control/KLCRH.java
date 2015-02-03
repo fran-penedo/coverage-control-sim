@@ -32,6 +32,8 @@ public class KLCRH extends Control {
 	protected int K; // Lookahead steps
 	protected double delta; // Partition fuzzy coefficient
 	protected int b; // Partition neighbor size
+	protected double gamma; // Sparsity factor coefficient
+	protected boolean actionh_enabled; // Use action H computation
 	protected HashSet<Agent> neighbors; // Controlled agents
 
 	/**
@@ -45,18 +47,25 @@ public class KLCRH extends Control {
 	 *            The fuzzy coefficient for the partitions
 	 * @param b
 	 *            The neighbor size for the partition
+	 * @param gamma
+	 *            The weight of the sparsity factor in the travel cost
+	 * @param actionHEnabled
+	 *            Whether the computation of action H is enabled
 	 */
-	public KLCRH(int K, double delta, int b) {
+	public KLCRH(int K, double delta, int b, double gamma,
+			boolean actionHEnabled) {
 		this.K = K;
 		this.delta = delta;
 		this.b = b;
+		this.gamma = gamma;
+		this.actionh_enabled = actionHEnabled;
 	}
 
 	/**
 	 * Test constructor.
 	 */
 	public KLCRH() {
-		this(1, 0.5, 2);
+		this(1, 0.5, 2, 0, true);
 	}
 
 	@Override
@@ -93,8 +102,10 @@ public class KLCRH extends Control {
 
 		if (agents.size() > 0 && targets.size() > 0) {
 			Heading best = bestHeading(d, agents, targets, K);
-			double action_h = actionH();
-			action_h = best.plan_h; // FIXME remove
+			double action_h = best.plan_h;
+			if (actionh_enabled) {
+				action_h = actionH();
+			}
 
 			broadcastControl(neighbors, best);
 
@@ -304,8 +315,8 @@ public class KLCRH extends Control {
 
 	protected double targetTravelCost(Target t, Point x, List<Target> targets) {
 		return x.dist(t.getPos())
-				/ (t.getIReward() / t.getDiscount().getDeadline())
-				+ targetCostFactor(t, targets);
+				/ (t.getIReward() / t.getDiscount().getDeadline()) + gamma
+				* targetCostFactor(t, targets);
 
 	}
 
@@ -313,7 +324,6 @@ public class KLCRH extends Control {
 		double ret = 0;
 		for (Target ts : targets) {
 			if (ts.isActive()) {
-				// FIXME gamma
 				ret += t.getPos().dist(ts.getPos())
 						/ (ts.getIReward() / ts.getDiscount().getDeadline());
 			}
@@ -364,6 +374,36 @@ public class KLCRH extends Control {
 	 */
 	public void setB(int b) {
 		this.b = b;
+	}
+
+	/**
+	 * @return The parameter gamma
+	 */
+	public double getGamma() {
+		return gamma;
+	}
+
+	/**
+	 * @param gamma
+	 *            The parameter gamma to set
+	 */
+	public void setGamma(double gamma) {
+		this.gamma = gamma;
+	}
+
+	/**
+	 * @return Whether the computation for action H is enabled or not
+	 */
+	public boolean getActionHEnabled() {
+		return actionh_enabled;
+	}
+
+	/**
+	 * @param actionHEnabled
+	 *            Whether the computation for action H is enable or not
+	 */
+	public void setActionHEnabled(boolean actionHEnabled) {
+		this.actionh_enabled = actionHEnabled;
 	}
 
 	// Result of each lookahead step
@@ -457,12 +497,13 @@ public class KLCRH extends Control {
 
 	@Override
 	public String toCode() {
-		return super.toCode() + " " + K + " " + delta + " " + b;
+		return super.toCode() + " " + K + " " + delta + " " + b + " " + gamma
+				+ " " + (actionh_enabled ? 1 : 0);
 	}
 
 	@Override
 	public Control deepCopy() {
-		return new KLCRH(K, delta, b);
+		return new KLCRH(K, delta, b, gamma, actionh_enabled);
 	}
 
 }

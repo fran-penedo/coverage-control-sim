@@ -199,9 +199,11 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		int K = 2;
 		double delta = 0.5;
 		int b = 2;
+		double gamma = 0;
+		boolean actionh = false;
 		MasterAgent master = new MasterAgent(d);
 		master.setCommunication(new BasicComm());
-		master.setControl(new KLCRH(K, delta, b));
+		master.setControl(new KLCRH(K, delta, b, gamma, actionh));
 		master.setSense(new MasterSense());
 		ActorComponent ac = new ActorComponent(this, master);
 		add(ac, new Integer(0));
