@@ -173,16 +173,6 @@ public class Agent extends MovingActor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see coverage.actor.Actor#paint(java.awt.Graphics)
-	 */
-	@Override
-	public void paint(Graphics g) {
-		Painter.drawAgent((Graphics2D) g, size, heading, id, Color.cyan);
-	}
-
 	/**
 	 * Sets the control module.
 	 * 
@@ -312,5 +302,20 @@ public class Agent extends MovingActor {
 	@Override
 	public ActorInfo getInfoPanel(Tableau tableau) {
 		return AgentInfo.getAgentInfo(this, tableau);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see coverage.actor.Actor#paint(java.awt.Graphics)
+	 */
+	@Override
+	public void paint(Graphics g) {
+		Painter.drawAgent((Graphics2D) g, size, heading, id, Color.cyan);
+	}
+
+	@Override
+	public Integer getLayer() {
+		return Tableau.AGENT_LAYER;
 	}
 }

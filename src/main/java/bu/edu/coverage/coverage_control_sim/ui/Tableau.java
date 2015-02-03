@@ -42,12 +42,13 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  */
 public class Tableau extends JLayeredPane implements ActionListener {
 	protected static final String TRAJECTORIES = "Trajectories";
-	protected static final Integer INFO_LAYER = new Integer(0);
-	protected static final Integer OBSTACLE_LAYER = new Integer(1);
-	protected static final Integer TARGET_LAYER = new Integer(2);
-	protected static final Integer AGENT_LAYER = new Integer(3);
-	// This one should be the highest
-	protected static final Integer GLASS_LAYER = new Integer(10);
+	public static final Integer INFO_LAYER = new Integer(0);
+	public static final Integer OBSTACLE_LAYER = new Integer(1);
+	public static final Integer TARGET_LAYER = new Integer(2);
+	public static final Integer AGENT_LAYER = new Integer(3);
+	// These two should be the highest
+	public static final Integer TOP_LAYER = new Integer(9);
+	public static final Integer GLASS_LAYER = new Integer(10);
 
 	public final int width;
 	public final int height;
@@ -113,11 +114,11 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		}
 		this.d = d;
 		for (Actor a : d.getActors()) {
-			if (a instanceof MasterAgent) {
-				MasterAgent m = (MasterAgent) a;
-				info_panel.add(m.getInfoPanel(this));
+			ActorInfo info = a.getInfoPanel(this);
+			if (info != null && info.alwaysVisible()) {
+				info_panel.add(info);
 			}
-			add(new ActorComponent(this, a));
+			add(new ActorComponent(this, a), a.getLayer());
 		}
 		repaint();
 	}
@@ -134,9 +135,12 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		}
 	}
 
-	public void restart() { // FIXME not started yet
+	public void restart() {
 		started = false;
 		timer.stop();
+		if (saved == null) {
+			saved = d.deepCopy();
+		}
 		setDirector(saved);
 	}
 
