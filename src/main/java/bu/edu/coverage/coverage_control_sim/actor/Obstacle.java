@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
-import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 

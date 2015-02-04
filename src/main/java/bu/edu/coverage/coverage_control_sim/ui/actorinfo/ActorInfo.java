@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bu.edu.coverage.coverage_control_sim.ui;
+package bu.edu.coverage.coverage_control_sim.ui.actorinfo;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 
 /**
  * Panel used for showing and changing information about a single actor.
@@ -73,11 +75,15 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 		fields.put(label, text);
 	}
 
-	// Updates the panel
-	protected abstract void update();
+	/**
+	 * Updates the panel
+	 */
+	public abstract void update();
 
-	// Sets the changes on the actor
-	protected abstract void set();
+	/**
+	 * Sets the changes on the actor
+	 */
+	public abstract void set();
 
 	/**
 	 * 

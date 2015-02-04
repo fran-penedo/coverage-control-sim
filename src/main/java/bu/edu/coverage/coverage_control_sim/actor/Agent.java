@@ -15,9 +15,9 @@ import bu.edu.coverage.coverage_control_sim.control.Control;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.sense.Sense;
-import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
-import bu.edu.coverage.coverage_control_sim.ui.AgentInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.AgentInfo;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 

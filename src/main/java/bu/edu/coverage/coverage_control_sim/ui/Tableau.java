@@ -34,6 +34,7 @@ import bu.edu.coverage.coverage_control_sim.control.KLCRH;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.sense.BasicSense;
 import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**

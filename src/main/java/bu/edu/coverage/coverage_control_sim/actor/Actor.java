@@ -7,8 +7,8 @@ import java.awt.Graphics;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.event.Event;
-import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**

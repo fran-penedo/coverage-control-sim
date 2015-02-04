@@ -6,9 +6,9 @@ package bu.edu.coverage.coverage_control_sim.actor;
 import java.awt.Graphics;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
-import bu.edu.coverage.coverage_control_sim.ui.ActorInfo;
-import bu.edu.coverage.coverage_control_sim.ui.MasterInfo;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.MasterInfo;
 
 /**
  * A hidden agent intended for simulation bookkeeping and taking the agent

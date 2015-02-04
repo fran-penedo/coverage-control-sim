@@ -1,11 +1,12 @@
 /**
  * 
  */
-package bu.edu.coverage.coverage_control_sim.ui;
+package bu.edu.coverage.coverage_control_sim.ui.actorinfo;
 
 import bu.edu.coverage.coverage_control_sim.actor.MasterAgent;
 import bu.edu.coverage.coverage_control_sim.control.KLCRH;
 import bu.edu.coverage.coverage_control_sim.sense.MasterSense;
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 
 /**
  * Information panel for a master agent. Will pause the simulation when no more

@@ -1,10 +1,11 @@
 /**
  * 
  */
-package bu.edu.coverage.coverage_control_sim.ui;
+package bu.edu.coverage.coverage_control_sim.ui.actorinfo;
 
 import bu.edu.coverage.coverage_control_sim.actor.Target;
 import bu.edu.coverage.coverage_control_sim.control.DeadlineDiscount;
+import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
