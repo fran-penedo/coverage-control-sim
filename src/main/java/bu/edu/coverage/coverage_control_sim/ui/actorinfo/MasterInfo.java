@@ -81,7 +81,7 @@ public class MasterInfo extends ActorInfo {
 		// Pauses the simulation if no more targets are active.
 		// NOTE: Not sure how I feel about this
 		if (s.getTargets() != null && s.getTargets().isEmpty()) {
-			tableau.pause();
+			tableau.togglePause();
 		}
 
 	}

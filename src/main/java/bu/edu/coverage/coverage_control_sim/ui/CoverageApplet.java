@@ -20,13 +20,17 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.border.BevelBorder;
 
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.util.ParseException;
@@ -47,7 +51,6 @@ public class CoverageApplet extends Applet implements ActionListener {
 	protected static final String RESTART = "Restart";
 	protected static final String RESET = "Reset";
 	protected static final String PAUSE = "Pause";
-	protected static final String RESUME = "Resume";
 	protected static final String SELECT = "Select";
 	protected static final String ADDAGENTS = "Add Agents";
 	protected static final String ADDTARGETS = "Add Targets";
@@ -124,6 +127,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 		t = new Tableau(SIZE, SIZE, d);
 
 		JPanel center = new JPanel();
+		center.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		center.add(t);
 		add("Center", center);
 
@@ -132,19 +136,22 @@ public class CoverageApplet extends Applet implements ActionListener {
 		top.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
 		JPanel control = createControlPanel();
-		JPanel mode = createModePanel();
-		JPanel command = createCommandPanel();
 
 		top.add(control);
-		top.add(mode);
-		top.add(command);
 		add("North", top);
 
 		// Create the left panel (used for toggling information layers
 		JPanel left = new JPanel();
+		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 
 		JPanel layer = createLayerPanel();
+		JPanel mode = createModePanel();
+		JPanel command = createCommandPanel();
 
+		left.add(mode);
+		left.add(Box.createRigidArea(new Dimension(0, 10)));
+		left.add(command);
+		left.add(Box.createRigidArea(new Dimension(0, 10)));
 		left.add(layer);
 		add("West", left);
 
@@ -152,8 +159,10 @@ public class CoverageApplet extends Applet implements ActionListener {
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		t.setInfoPanel(right);
+		JScrollPane scrollright = new JScrollPane(right);
+		scrollright.getVerticalScrollBar().setUnitIncrement(16);
 
-		add("East", right);
+		add("East", scrollright);
 
 		// Add master to tableau (need everything setup so it can spawn the
 		// information panel
@@ -172,13 +181,16 @@ public class CoverageApplet extends Applet implements ActionListener {
 
 	private JPanel createModePanel() {
 		JPanel mode = new JPanel();
-		mode.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+		mode.setLayout(new BoxLayout(mode, BoxLayout.Y_AXIS));
 
 		ButtonGroup group = new ButtonGroup();
 		JToggleButton select = createToggleButton(SELECT, mode, this);
 		group.add(select);
+		mode.add(Box.createRigidArea(new Dimension(0, 5)));
 		group.add(createToggleButton(ADDAGENTS, mode, this));
+		mode.add(Box.createRigidArea(new Dimension(0, 5)));
 		group.add(createToggleButton(ADDTARGETS, mode, this));
+		mode.add(Box.createRigidArea(new Dimension(0, 5)));
 		group.add(createToggleButton(ADDOBSTACLES, mode, this));
 
 		select.setSelected(true);
@@ -201,7 +213,6 @@ public class CoverageApplet extends Applet implements ActionListener {
 		createButton(LOAD, control, this);
 		createButton(SAVE, control, this);
 		createButton(START, control, this);
-		createButton(RESUME, control, this);
 		createButton(PAUSE, control, this);
 		createButton(RESTART, control, this);
 		createButton(RESET, control, this);
@@ -211,7 +222,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 
 	private JPanel createCommandPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		createButton(REMOVE, panel, this);
 
@@ -223,6 +234,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 	private JButton createButton(String text, Container container,
 			ActionListener listener) {
 		JButton b = new JButton(text);
+		b.setAlignmentX(CENTER_ALIGNMENT);
 		b.setActionCommand(text);
 		b.addActionListener(listener);
 		container.add(b);
@@ -235,6 +247,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 	private JToggleButton createToggleButton(String text, Container container,
 			ActionListener listener) {
 		JToggleButton b = new JToggleButton(text);
+		b.setAlignmentX(CENTER_ALIGNMENT);
 		b.setActionCommand(text);
 		b.addActionListener(listener);
 		container.add(b);
@@ -247,6 +260,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 	private JCheckBox createCheckBox(String text, Container container,
 			ActionListener listener) {
 		JCheckBox b = new JCheckBox(text);
+		b.setAlignmentX(CENTER_ALIGNMENT);
 		b.setActionCommand(text);
 		b.addActionListener(listener);
 		b.setSelected(true);
@@ -294,10 +308,6 @@ public class CoverageApplet extends Applet implements ActionListener {
 			t.start();
 			break;
 		}
-		case RESUME: {
-			t.resume();
-			break;
-		}
 		case RESTART: {
 			t.restart();
 			break;
@@ -307,7 +317,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 			break;
 		}
 		case PAUSE: {
-			t.pause();
+			t.togglePause();
 			break;
 		}
 		case SELECT: {

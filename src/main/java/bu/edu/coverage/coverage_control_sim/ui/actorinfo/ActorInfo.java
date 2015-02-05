@@ -11,11 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
 
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 
@@ -42,6 +44,7 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 	// Non public constructor for singleton
 	protected ActorInfo() {
 		fields = new HashMap<>();
+		setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -68,7 +71,7 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 	protected void addInfoPair(String label) {
 		JPanel pair = new JPanel(new FlowLayout());
 		JLabel l = new JLabel(label);
-		JTextField text = new JTextField(20);
+		JTextField text = new JTextField(5);
 		pair.add(l);
 		pair.add(text);
 		info.add(pair);

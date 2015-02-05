@@ -101,6 +101,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		addMouseListener(new TableauMouseAdapter());
 		setPreferredSize(new Dimension(width, height));
 		setBorder(BorderFactory.createLineBorder(Color.black));
+		setBackground(Color.white);
 		setLayout(null);
 		setOpaque(true);
 		this.init = true;
@@ -151,9 +152,11 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		addMaster();
 	}
 
-	public void pause() {
+	public void togglePause() {
 		if (started) {
 			timer.stop();
+		} else {
+			timer.start();
 		}
 	}
 
