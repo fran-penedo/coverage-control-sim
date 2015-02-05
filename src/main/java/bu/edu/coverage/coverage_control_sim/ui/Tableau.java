@@ -323,7 +323,6 @@ public class Tableau extends JLayeredPane implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		d.runFor(1);
-		// d.updateAll();
 		repaint();
 	}
 

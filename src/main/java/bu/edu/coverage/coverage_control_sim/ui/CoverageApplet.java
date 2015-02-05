@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -92,6 +93,13 @@ public class CoverageApplet extends Applet implements ActionListener {
 	@Override
 	public void init() {
 		super.init();
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				ErrorDialog.showQuickErrorDialog(CoverageApplet.this, e);
+			}
+		});
 
 		try {
 			EventQueue.invokeAndWait(new Runnable() {
@@ -101,9 +109,9 @@ public class CoverageApplet extends Applet implements ActionListener {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			ErrorDialog.showQuickErrorDialog(this, e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ErrorDialog.showQuickErrorDialog(this, e);
 		}
 	}
 
@@ -278,9 +286,9 @@ public class CoverageApplet extends Applet implements ActionListener {
 					Director d = parser.input();
 					t.setDirector(d);
 				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+					ErrorDialog.showQuickErrorDialog(this, e1);
 				} catch (ParseException e1) {
-					e1.printStackTrace();
+					ErrorDialog.showQuickErrorDialog(this, e1);
 				}
 			}
 			break;
@@ -294,7 +302,7 @@ public class CoverageApplet extends Applet implements ActionListener {
 					st.close();
 
 				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+					ErrorDialog.showQuickErrorDialog(this, e1);
 				}
 			}
 			break;
