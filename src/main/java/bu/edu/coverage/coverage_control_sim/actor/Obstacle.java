@@ -12,6 +12,7 @@ import java.util.List;
 import bu.edu.coverage.coverage_control_sim.event.Director;
 import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ObstacleInfo;
 import bu.edu.coverage.coverage_control_sim.util.Painter;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
@@ -63,6 +64,33 @@ public class Obstacle extends Actor {
 		this.p = new Point(minx + size.x / 2, miny + size.y / 2);
 	}
 
+	public List<Point> getPoints() {
+		ArrayList<Point> rawpoints = new ArrayList<>();
+		for (Point p : points) {
+			rawpoints.add(p.add(getPos()));
+		}
+		return rawpoints;
+	}
+
+	public void setPoint(int i, Point p) {
+		List<Point> raw = getPoints();
+		if (i >= raw.size()) {
+			raw.add(p);
+		} else {
+			raw.set(i, p);
+		}
+		setBounds(raw);
+		this.points = moveToOrigin(raw);
+
+	}
+
+	public void removePoint(int i) {
+		List<Point> raw = getPoints();
+		raw.remove(i);
+		setBounds(raw);
+		this.points = moveToOrigin(raw);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -96,8 +124,7 @@ public class Obstacle extends Actor {
 	 */
 	@Override
 	public ActorInfo getInfoPanel(Tableau tableau) {
-		// TODO Auto-generated method stub
-		return null;
+		return ObstacleInfo.getObstacleInfo(this, tableau);
 	}
 
 	/*

@@ -6,6 +6,7 @@ package bu.edu.coverage.coverage_control_sim.ui.actorinfo;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -55,9 +56,8 @@ public abstract class ActorInfo extends JPanel implements ActionListener {
 		add(set, c);
 
 		c.gridy = 1;
+		c.insets = new Insets(10, 0, 0, 0);
 		add(info, c);
-
-		addInfoPair(ID);
 	}
 
 	protected void setTableau(Tableau tableau) {

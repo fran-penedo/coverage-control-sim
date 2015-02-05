@@ -33,6 +33,7 @@ public class TargetInfo extends ActorInfo {
 	protected Target t;
 
 	protected TargetInfo() {
+		addInfoPair(ID);
 		addInfoPair(X);
 		addInfoPair(Y);
 		addInfoPair(IREWARD);

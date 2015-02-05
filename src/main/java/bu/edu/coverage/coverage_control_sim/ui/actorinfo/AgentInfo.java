@@ -29,6 +29,7 @@ public class AgentInfo extends ActorInfo {
 	protected Agent a;
 
 	protected AgentInfo() {
+		addInfoPair(ID);
 		addInfoPair(X);
 		addInfoPair(Y);
 		addInfoPair(V);

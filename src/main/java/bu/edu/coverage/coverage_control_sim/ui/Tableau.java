@@ -301,7 +301,6 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	}
 
 	public void glassDoubleClick(MouseEvent e) {
-		glassLeftClick(e);
 		addObstacle(draw_poly.getPoints());
 		draw_poly.clear();
 	}

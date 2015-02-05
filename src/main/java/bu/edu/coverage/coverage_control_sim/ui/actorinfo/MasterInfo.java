@@ -34,6 +34,7 @@ public class MasterInfo extends ActorInfo {
 	protected MasterAgent m;
 
 	protected MasterInfo() {
+		addInfoPair(ID);
 		addInfoPair(K);
 		addInfoPair(DELTA);
 		addInfoPair(B);
