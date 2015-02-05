@@ -67,6 +67,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	protected JPanel info_panel;
 
 	protected boolean started;
+	protected boolean running;
 	protected boolean init;
 
 	public Tableau(int width, int height, Director d) {
@@ -75,6 +76,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		this.height = height;
 		this.d = d;
 		started = false;
+		running = false;
 
 		this.mode = Mode.SELECT;
 		this.actors = new ArrayList<>();
@@ -129,6 +131,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		started = true;
 		saved = d.deepCopy();
 		timer.start();
+		running = true;
 	}
 
 	public void resume() {
@@ -138,8 +141,9 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	}
 
 	public void restart() {
-		started = false;
 		timer.stop();
+		started = false;
+		running = false;
 		if (saved == null) {
 			saved = d.deepCopy();
 		}
@@ -153,10 +157,12 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	}
 
 	public void togglePause() {
-		if (started) {
+		if (running) {
 			timer.stop();
+			running = false;
 		} else {
 			timer.start();
+			running = true;
 		}
 	}
 
