@@ -13,17 +13,18 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
  * Base class for actors.
- * 
+ * <p>
  * NOTE: could be non abstract really.
+ * <p>
+ * NOTE: ID is currently integer, maybe string would be better.
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *
  */
 public abstract class Actor {
-	protected final int id; // TODO Maybe name
+	protected final int id;
 	protected final Director director;
 	protected Point p; // Position
-	// TODO not so sure I like this
 	protected Point size; // Size of the rectangle covering the actor
 
 	/**

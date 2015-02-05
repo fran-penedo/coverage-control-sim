@@ -97,7 +97,6 @@ public class KLCRH extends Control {
 		Director d = new Director(now);
 		// Copy targets and agents to run simulations for the lookahead steps
 		ArrayList<Agent> agents = copyAgents(d, neighbors);
-		// FIXME no sense
 		ArrayList<Target> targets = copyTargets(d, agent.getSense()
 				.getTargets());
 
@@ -301,8 +300,6 @@ public class KLCRH extends Control {
 		double j = 0;
 		for (Agent agent : agents) {
 			for (Target target : targets) {
-				// TODO 1 - What if two targets are in range? Not my problem?
-				// TODO 2 - Condition could be more complex, move to agent?
 				if (target.isActive() && target.inRange(agent.getPos())) {
 					j += target.getReward(t);
 					target.setActive(false);
@@ -472,7 +469,6 @@ public class KLCRH extends Control {
 		protected ArrayList<Integer> cur;
 		protected boolean next;
 
-		// FIXME empty list
 		public HeadIt(List<List<Double>> heads) {
 			this.heads = heads;
 			cur = new ArrayList<Integer>();

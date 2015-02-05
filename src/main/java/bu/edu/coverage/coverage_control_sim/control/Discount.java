@@ -23,9 +23,6 @@ public interface Discount {
 	/**
 	 * Gets a deadline time.
 	 * 
-	 * FIXME what if the function has no deadline?
-	 * FIXME min(D, T)
-	 * 
 	 * @return The deadline associated with this function
 	 */
 	public double getDeadline();

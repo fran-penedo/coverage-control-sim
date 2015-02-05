@@ -14,7 +14,7 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  * Displays the trajectories of the actors in the simulation.
  * 
  * <p>
- * TODO straight line updates should be optimized
+ * NOTE straight line updates should be optimized
  * 
  * @author Francisco Penedo (franp@bu.edu)
  */

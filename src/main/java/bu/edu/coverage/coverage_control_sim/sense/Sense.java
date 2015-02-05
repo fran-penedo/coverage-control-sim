@@ -69,8 +69,8 @@ public abstract class Sense {
 
 	/**
 	 * Informs the module that a given target has been visited.
-	 * 
-	 * TODO Maybe not needed? Real agents can filter the known list (targets
+	 * <p>
+	 * NOTE: Maybe not needed? Real agents can filter the known list (targets
 	 * mark themselves as non active). However that's unnecesarily inefficient.
 	 * On the other hand, the master agent needs to know so it can update the
 	 * reward. Maybe this is a good example of the main problem the module

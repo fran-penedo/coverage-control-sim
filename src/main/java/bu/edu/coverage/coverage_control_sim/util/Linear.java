@@ -3,8 +3,6 @@
  */
 package bu.edu.coverage.coverage_control_sim.util;
 
-import java.security.InvalidParameterException;
-
 /**
  * Linear algebra subroutines (very basic and ad hoc)
  * 
@@ -14,17 +12,18 @@ import java.security.InvalidParameterException;
 public class Linear {
 
 	/**
-	 * Solves a 2x2 linar system for the first variable
+	 * Solves a 2x2 linar system for the first variable.
 	 * 
 	 * @param a
 	 * @param b
 	 * @param c
-	 * @return The first variable of the solution
+	 * @return The first variable of the solution. If the system has rank < 2,
+	 *         returns positive infinity
 	 */
 	public static double solve1(Point a, Point b, Point c) {
 		double det = a.x * b.y - b.x * a.y;
-		if (det == 0) { // FIXME this is not good when dealing with double...
-			throw new InvalidParameterException("System rank < 2");
+		if (det == 0) {
+			return Double.POSITIVE_INFINITY;
 		}
 		return (c.x * b.y - b.x * c.y) / det;
 	}

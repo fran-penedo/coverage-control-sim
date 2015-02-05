@@ -11,6 +11,8 @@ import bu.edu.coverage.coverage_control_sim.ui.Tableau;
 /**
  * Information panel for a master agent. Will pause the simulation when no more
  * targets are active.
+ * <p>
+ * NOTE: Several things about this panel are not good enough.
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *
@@ -67,7 +69,7 @@ public class MasterInfo extends ActorInfo {
 	public void update() {
 		fields.get(ID).setText("" + m.getId());
 
-		// FIXME generic
+		// This should be done a bit more generic
 		KLCRH c = (KLCRH) m.getControl();
 		fields.get(K).setText("" + c.getK());
 		fields.get(DELTA).setText("" + c.getDelta());

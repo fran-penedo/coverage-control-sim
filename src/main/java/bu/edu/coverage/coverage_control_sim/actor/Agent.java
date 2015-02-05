@@ -25,8 +25,6 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
  * A moving agent with control, communication and sense modules. All logic is
  * coded in the modules, only the event dispatch is relevant in this class.
  * 
- * FIXME no need for getactors?
- * 
  * @author Francisco Penedo (franp@bu.edu)
  */
 public class Agent extends MovingActor {

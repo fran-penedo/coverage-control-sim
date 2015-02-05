@@ -56,7 +56,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	protected Director d;
 	protected Director saved;
 	protected Thread tableau;
-	protected final Timer timer = new Timer(40, this); // TODO parameter
+	protected final Timer timer = new Timer(40, this);
 	protected Mode mode;
 
 	protected GlassLayer glass;
@@ -107,7 +107,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		this.init = true;
 	}
 
-	public void setDirector(Director d) { // FIXME restart on load
+	public void setDirector(Director d) {
 		if (this.d != null) {
 			for (ActorComponent ac : actors) {
 				remove((JComponent) ac);
@@ -272,7 +272,10 @@ public class Tableau extends JLayeredPane implements ActionListener {
 
 	public void removeSelectedActor() {
 		if (selected != null) {
-			info_panel.remove(selected.getActor().getInfoPanel(this)); // FIXME
+			ActorInfo ip = selected.getActor().getInfoPanel(this);
+			if (ip != null) {
+				info_panel.remove(ip);
+			}
 			selected.remove();
 			selected = null;
 			repaint();

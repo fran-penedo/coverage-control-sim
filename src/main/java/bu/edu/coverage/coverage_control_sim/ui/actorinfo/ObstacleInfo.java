@@ -55,6 +55,7 @@ public class ObstacleInfo extends ActorInfo {
 		master.add("South", buttons);
 
 		info.add(master);
+		remove(set);
 	}
 
 	/**
@@ -95,8 +96,7 @@ public class ObstacleInfo extends ActorInfo {
 	 */
 	@Override
 	public void set() {
-		// TODO Auto-generated method stub
-
+		// Ignore, no need for set button
 	}
 
 	@Override

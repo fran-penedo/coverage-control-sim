@@ -40,8 +40,6 @@ import bu.edu.coverage.coverage_control_sim.actor.Target;
  * \]
  * 
  * Partitions are done following a least proximity rule.
- * <p>
- * FIXME does this make sense? There's no collaboration, I think.
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *

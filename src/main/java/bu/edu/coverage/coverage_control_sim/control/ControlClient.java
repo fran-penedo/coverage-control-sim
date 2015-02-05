@@ -12,6 +12,9 @@ import bu.edu.coverage.coverage_control_sim.event.Event.EType;
 /**
  * A control module for agents listening to the control signals obtained with
  * a centralized algorithm.
+ * <p>
+ * NOTE: Init time is now extremely ugly, not sure about a better way to do it.
+ * Maybe ACK message from server/master so it can retry later.
  * 
  * @author Francisco Penedo (franp@bu.edu)
  *
@@ -21,7 +24,6 @@ public class ControlClient extends Control {
 	@Override
 	public void init() {
 		double now = agent.getDirector().getCurrentTime();
-		// FIXME init time
 		agent.postEvent(new Event(now, now + 0.1, agent, EType.CONTROL));
 	}
 

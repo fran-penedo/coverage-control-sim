@@ -71,7 +71,7 @@ public class TargetInfo extends ActorInfo {
 		fields.get(CREWARD).setText(
 				"" + t.getReward(tableau.getDirector().getCurrentTime()));
 
-		// FIXME do generic
+		// This could be done a bit more generic
 		DeadlineDiscount disc = (DeadlineDiscount) t.getDiscount();
 		fields.get(ALPHA).setText("" + disc.alpha);
 		fields.get(BETA).setText("" + disc.beta);

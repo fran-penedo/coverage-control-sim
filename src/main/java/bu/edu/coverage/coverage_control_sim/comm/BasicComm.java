@@ -8,6 +8,7 @@ import bu.edu.coverage.coverage_control_sim.actor.Agent;
 import bu.edu.coverage.coverage_control_sim.actor.Agent.VisitedMsgInfo;
 import bu.edu.coverage.coverage_control_sim.event.Event;
 import bu.edu.coverage.coverage_control_sim.event.Event.EType;
+import bu.edu.coverage.coverage_control_sim.util.Debug;
 
 /**
  * Simple Communication scheme. No relay.
@@ -70,7 +71,7 @@ public class BasicComm extends Communication {
 			break;
 		}
 		default: {
-			// System.err.println(); // FIXME
+			Debug.debug("Processing unkown message " + msg);
 			break;
 		}
 		}

@@ -81,13 +81,11 @@ public class CoverageApplet extends Applet implements ActionListener {
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
 		super.stop();
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		super.destroy();
 	}
 
@@ -277,13 +275,11 @@ public class CoverageApplet extends Applet implements ActionListener {
 				try {
 					Parser parser = new Parser(new FileInputStream(
 							fc.getSelectedFile()));
-					// FIXME will fail if called twice I think
 					Director d = parser.input();
 					t.setDirector(d);
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -298,7 +294,6 @@ public class CoverageApplet extends Applet implements ActionListener {
 					st.close();
 
 				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}

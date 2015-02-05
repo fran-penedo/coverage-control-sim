@@ -98,7 +98,7 @@ public class Obstacle extends Actor {
 	 */
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		// Ignore
 
 	}
 
@@ -111,7 +111,7 @@ public class Obstacle extends Actor {
 	 */
 	@Override
 	public Actor deepCopy(Director d) {
-		// TODO Auto-generated method stub
+		// FIXME save and load obstacles
 		return null;
 	}
 
