@@ -111,8 +111,7 @@ public class Obstacle extends Actor {
 	 */
 	@Override
 	public Actor deepCopy(Director d) {
-		// FIXME save and load obstacles
-		return null;
+		return new Obstacle(d, getPoints());
 	}
 
 	/*
@@ -143,6 +142,17 @@ public class Obstacle extends Actor {
 	@Override
 	public Integer getLayer() {
 		return Tableau.OBSTACLE_LAYER;
+	}
+
+	@Override
+	public String toCode() {
+		String ret = super.toCode();
+		List<Point> raw = getPoints();
+		for (Point p : raw) {
+			ret += " " + p.toCode();
+		}
+
+		return ret;
 	}
 
 }

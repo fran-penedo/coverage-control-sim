@@ -7,6 +7,8 @@ import bu.edu.coverage.coverage_control_sim.actor.*;
 import bu.edu.coverage.coverage_control_sim.control.*;
 import bu.edu.coverage.coverage_control_sim.comm.*;
 import bu.edu.coverage.coverage_control_sim.sense.*;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Parser{	public static void main(String args[]) throws ParseException	{	  Parser p = new Parser(System.in);
@@ -28,6 +30,8 @@ TOKEN :
   < AGENT: "Agent" >
 |
   < TARGET: "Target" >
+|
+  < OBSTACLE: "Obstacle" >
 |
   < DEADLINE: "Deadline" >
 }
@@ -58,7 +62,7 @@ Director input() :
 
 void actor(Director d) :
 {}
-{  master(d) | agent(d) | target(d)
+{  master(d) | agent(d) | target(d) | obstacle(d)
 }
 
 void master(Director d) :
@@ -107,6 +111,20 @@ void agent(Director d) :
     agent.setCommunication(new BasicComm());
 	agent.setControl(new ControlClient());
 	agent.setSense(new BasicSense(1));
+  }
+}
+
+void obstacle(Director d) :
+{
+  Point p;
+  Point size;
+  List<Point> pp;}
+{  < OBSTACLE >
+  p = point()
+  size = point()
+  pp = pointList()
+  "\n"
+  {    Obstacle obstacle = new Obstacle(d, pp);
   }
 }
 
@@ -159,6 +177,18 @@ Point point() :
   {    return new Point(x, y);
   }
 }
+
+List<Point> pointList() :
+{  ArrayList<Point> points = new ArrayList<Point>();
+}
+{  ( pointOfList(points) )+
+  {    return points;
+  }
+}
+void pointOfList(List<Point> points) :{
+  Point p;}{  p=point()
+  {    points.add(p);
+  }}
 
 double value() :
 {  Token t;
