@@ -130,20 +130,18 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	public void start() {
 		started = true;
 		saved = d.deepCopy();
-		timer.start();
-		running = true;
+		setRunning(true);
 	}
 
 	public void resume() {
 		if (started) {
-			timer.start();
+			setRunning(true);
 		}
 	}
 
 	public void restart() {
-		timer.stop();
+		setRunning(false);
 		started = false;
-		running = false;
 		if (saved == null) {
 			saved = d.deepCopy();
 		}
@@ -157,12 +155,21 @@ public class Tableau extends JLayeredPane implements ActionListener {
 	}
 
 	public void togglePause() {
-		if (running) {
-			timer.stop();
-			running = false;
-		} else {
+		if (started) {
+			if (running) {
+				setRunning(false);
+			} else {
+				setRunning(true);
+			}
+		}
+	}
+
+	protected void setRunning(boolean running) {
+		this.running = running;
+		if (this.running) {
 			timer.start();
-			running = true;
+		} else {
+			timer.stop();
 		}
 	}
 
