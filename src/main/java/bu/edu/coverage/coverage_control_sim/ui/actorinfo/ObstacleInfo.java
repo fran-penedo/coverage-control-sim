@@ -56,7 +56,7 @@ public class ObstacleInfo extends ActorInfo {
 		master.add("South", buttons);
 
 		info.add(master);
-		info.setPreferredSize(new Dimension(200, 300));
+		info.setPreferredSize(new Dimension(200, 200));
 		remove(set);
 	}
 
@@ -73,6 +73,7 @@ public class ObstacleInfo extends ActorInfo {
 	static public ObstacleInfo getObstacleInfo(Obstacle a, Tableau t) {
 		instance.setObstacle(a);
 		instance.setTableau(t);
+		// instance.info.setPreferredSize(new Dimension(200, 500));
 		return instance;
 	}
 
