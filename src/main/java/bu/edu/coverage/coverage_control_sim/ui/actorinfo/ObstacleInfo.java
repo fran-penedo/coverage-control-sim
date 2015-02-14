@@ -4,6 +4,7 @@
 package bu.edu.coverage.coverage_control_sim.ui.actorinfo;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
@@ -55,6 +56,7 @@ public class ObstacleInfo extends ActorInfo {
 		master.add("South", buttons);
 
 		info.add(master);
+		info.setPreferredSize(new Dimension(200, 300));
 		remove(set);
 	}
 
