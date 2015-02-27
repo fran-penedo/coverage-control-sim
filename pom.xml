@@ -101,6 +101,18 @@
   			        <additionalparam>-header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
   			</configuration>
   		</plugin>
+        <plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+        	<artifactId>maven-jar-plugin</artifactId>
+        	<version>2.4</version>
+        	<configuration>
+        		<archive>
+        			<manifestEntries>
+        				<Permissions>all-permissions</Permissions>
+        			</manifestEntries>
+        		</archive>
+        	</configuration>
+       	</plugin>
   	</plugins>
   	<pluginManagement>
   		<plugins>
