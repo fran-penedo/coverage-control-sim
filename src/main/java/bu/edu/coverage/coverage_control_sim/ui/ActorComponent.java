@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
 
 import bu.edu.coverage.coverage_control_sim.actor.Actor;
+import bu.edu.coverage.coverage_control_sim.ui.actorinfo.ActorInfo;
 import bu.edu.coverage.coverage_control_sim.util.Point;
 
 /**
@@ -29,6 +30,7 @@ public class ActorComponent extends JComponent {
 	protected final Tableau tableau; // Containing tableau
 	protected final Actor actor; // Associated actor
 	protected boolean selected; // Selected status
+	protected ActorInfo info_panel; // Info panel associated with the actor
 
 	/**
 	 * Creates a component for an actor with a containing tableau. The component
@@ -43,6 +45,7 @@ public class ActorComponent extends JComponent {
 		this.tableau = tableau;
 		this.actor = a;
 		this.selected = false;
+		this.info_panel = a.getInfoPanel(tableau);
 		setActorBounds();
 
 		ACMouseAdapter adapter = new ACMouseAdapter();
@@ -161,5 +164,9 @@ public class ActorComponent extends JComponent {
 	 */
 	public static int drawSize(double size) {
 		return Math.max((int) size, MIN_SIZE);
+	}
+
+	public ActorInfo getInfoPanel() {
+		return info_panel;
 	}
 }

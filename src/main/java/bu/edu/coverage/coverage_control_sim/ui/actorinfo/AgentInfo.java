@@ -22,9 +22,6 @@ public class AgentInfo extends ActorInfo {
 	protected static final String V = "v";
 	protected static final String HEAD = "head";
 
-	// Singleton instance
-	static protected AgentInfo instance = new AgentInfo();
-
 	// Referring agent
 	protected Agent a;
 
@@ -47,6 +44,7 @@ public class AgentInfo extends ActorInfo {
 	 * @return The info panel associated to the agent
 	 */
 	static public AgentInfo getAgentInfo(Agent a, Tableau t) {
+		AgentInfo instance = new AgentInfo();
 		instance.setAgent(a);
 		instance.setTableau(t);
 		return instance;

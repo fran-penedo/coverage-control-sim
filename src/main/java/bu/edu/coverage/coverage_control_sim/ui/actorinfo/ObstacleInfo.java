@@ -25,9 +25,6 @@ import bu.edu.coverage.coverage_control_sim.util.Point;
 public class ObstacleInfo extends ActorInfo {
 	private static final long serialVersionUID = 1L;
 
-	// Singleton instance
-	static protected ObstacleInfo instance = new ObstacleInfo();
-
 	protected static final String ADD = "Add point";
 	protected static final String REMOVE = "Remove point";
 
@@ -71,6 +68,7 @@ public class ObstacleInfo extends ActorInfo {
 	 * @return The info panel associated to the obstacle
 	 */
 	static public ObstacleInfo getObstacleInfo(Obstacle a, Tableau t) {
+		ObstacleInfo instance = new ObstacleInfo();
 		instance.setObstacle(a);
 		instance.setTableau(t);
 		// instance.info.setPreferredSize(new Dimension(200, 500));

@@ -29,9 +29,6 @@ public class MasterInfo extends ActorInfo {
 	protected static final String J = "J";
 	protected static final String TIME = "Time";
 
-	// Singleton instance
-	static protected MasterInfo instance = new MasterInfo();
-
 	// Referring master agent
 	protected MasterAgent m;
 
@@ -57,6 +54,7 @@ public class MasterInfo extends ActorInfo {
 	 * @return The info panel associated to the master agent
 	 */
 	static public MasterInfo getMasterInfo(MasterAgent a, Tableau t) {
+		MasterInfo instance = new MasterInfo();
 		instance.setMaster(a);
 		instance.setTableau(t);
 		return instance;

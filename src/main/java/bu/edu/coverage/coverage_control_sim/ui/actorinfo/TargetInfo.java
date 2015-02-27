@@ -26,9 +26,6 @@ public class TargetInfo extends ActorInfo {
 	protected static final String BETA = "Beta";
 	protected static final String D = "D";
 
-	// Singleton instance
-	static protected TargetInfo instance = new TargetInfo();
-
 	// Referring target
 	protected Target t;
 
@@ -54,6 +51,7 @@ public class TargetInfo extends ActorInfo {
 	 * @return The info panel associated to the target
 	 */
 	static public TargetInfo getTargetInfo(Target a, Tableau t) {
+		TargetInfo instance = new TargetInfo();
 		instance.setTarget(a);
 		instance.setTableau(t);
 		return instance;

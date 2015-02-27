@@ -118,11 +118,12 @@ public class Tableau extends JLayeredPane implements ActionListener {
 		}
 		this.d = d;
 		for (Actor a : d.getActors()) {
-			ActorInfo info = a.getInfoPanel(this);
+			ActorComponent ac = new ActorComponent(this, a);
+			ActorInfo info = ac.getInfoPanel();
 			if (info != null && info.alwaysVisible()) {
 				info_panel.add(info);
 			}
-			add(new ActorComponent(this, a), a.getLayer());
+			add(ac, a.getLayer());
 		}
 		repaint();
 	}
@@ -263,9 +264,9 @@ public class Tableau extends JLayeredPane implements ActionListener {
 			unselect();
 			ac.setSelected(true);
 			selected = ac;
-			ActorInfo ip = ac.getActor().getInfoPanel(this);
+			ActorInfo ip = ac.getInfoPanel();
 			if (ip != null) {
-				info_panel.add(ac.getActor().getInfoPanel(this));
+				info_panel.add(ac.getInfoPanel());
 			}
 			repaint();
 		}
@@ -273,7 +274,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 
 	public void unselect() {
 		if (selected != null) {
-			ActorInfo ip = selected.getActor().getInfoPanel(this);
+			ActorInfo ip = selected.getInfoPanel();
 			if (ip != null) {
 				info_panel.remove(ip);
 			}
@@ -285,7 +286,7 @@ public class Tableau extends JLayeredPane implements ActionListener {
 
 	public void removeSelectedActor() {
 		if (selected != null) {
-			ActorInfo ip = selected.getActor().getInfoPanel(this);
+			ActorInfo ip = selected.getInfoPanel();
 			if (ip != null) {
 				info_panel.remove(ip);
 			}
